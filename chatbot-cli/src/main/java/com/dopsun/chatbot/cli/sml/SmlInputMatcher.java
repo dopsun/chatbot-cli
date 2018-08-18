@@ -163,24 +163,42 @@ public class SmlInputMatcher {
     }
 
     static class ConstantPart extends Part {
-        final String nameLower;
+        final List<String> words = new ArrayList<>();
 
         public ConstantPart(String name) {
             super(name);
 
-            this.nameLower = name.toLowerCase();
+            String[] wordArray = name.split(" ");
+            for (String word : wordArray) {
+                String temp = word.trim().toLowerCase();
+                if (temp.length() > 0) {
+                    words.add(temp);
+                }
+            }
         }
 
         public StartAndLength find(String input, int fromIndex) {
             Objects.requireNonNull(input);
-            
+
             String inputLower = input.toLowerCase();
-            int start = inputLower.indexOf(nameLower, fromIndex);
-            if (start < 0) {
-                return StartAndLength.NOT_FOUND;
+
+            int start = -1;
+            int lastWordStop = fromIndex;
+
+            for (String word : words) {
+                int index = inputLower.indexOf(word, lastWordStop);
+                if (index < 0) {
+                    return StartAndLength.NOT_FOUND;
+                }
+                
+                if (start < 0) {
+                    start = index;
+                }
+                
+                lastWordStop = index + word.length();
             }
 
-            return new StartAndLength(start, name.length());
+            return new StartAndLength(start, lastWordStop - start);
         }
     }
 
