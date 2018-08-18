@@ -60,7 +60,12 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+	
+	<modules>
+		<module>chatbot-cli</module>
+	</modules>
 
+<!-- Enable when for sonatype integration
 	<distributionManagement>
 		<snapshotRepository>
 			<id>ossrh</id>
@@ -132,7 +137,5 @@
 			</plugin>
 		</plugins>
 	</build>
-	<modules>
-		<module>chatbot-cli</module>
-	</modules>
+ -->
 </project>
