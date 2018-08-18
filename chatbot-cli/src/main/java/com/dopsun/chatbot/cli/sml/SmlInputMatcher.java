@@ -163,13 +163,19 @@ public class SmlInputMatcher {
     }
 
     static class ConstantPart extends Part {
+        final String nameLower;
+
         public ConstantPart(String name) {
             super(name);
+
+            this.nameLower = name.toLowerCase();
         }
 
         public StartAndLength find(String input, int fromIndex) {
             Objects.requireNonNull(input);
-            int start = input.indexOf(name, fromIndex);
+            
+            String inputLower = input.toLowerCase();
+            int start = inputLower.indexOf(nameLower, fromIndex);
             if (start < 0) {
                 return StartAndLength.NOT_FOUND;
             }
