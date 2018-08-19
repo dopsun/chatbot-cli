@@ -1,0 +1,64 @@
+/*
+ * Copyright (c) 2018 Dop Sun. All rights reserved.
+ */
+
+package com.dopsun.chatbot.cli.sml;
+
+/**
+ * @author Dop Sun
+ * @since 1.0.0
+ */
+public class StartAndLength {
+    /**
+     * 
+     */
+    public static final StartAndLength NOT_FOUND = new StartAndLength();
+
+    private final int start;
+    private final int length;
+
+    /**
+     * 
+     */
+    private StartAndLength() {
+        this.start = -1;
+        this.length = -1;
+    }
+
+    /**
+     * @return
+     */
+    public boolean isNotFound() {
+        return this.start < 0;
+    }
+
+    /**
+     * @param start
+     * @param length
+     */
+    public StartAndLength(int start, int length) {
+        this.start = start;
+        this.length = length;
+    }
+
+    /**
+     * @return
+     */
+    public int start() {
+        return start;
+    }
+
+    /**
+     * @return
+     */
+    public int length() {
+        return length;
+    }
+
+    /**
+     * @return
+     */
+    public int stop() {
+        return start + length;
+    }
+}

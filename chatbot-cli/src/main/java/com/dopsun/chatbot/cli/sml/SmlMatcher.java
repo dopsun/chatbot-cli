@@ -21,7 +21,7 @@ import com.dopsun.chatbot.cli.tds.DataItem;
  */
 public class SmlMatcher {
     private final String commandName;
-    private final List<SmlInputMatcher> inputMatcherList;
+    private final List<SmlSentenceMatcher> inputMatcherList;
 
     /**
      * @param dataItem
@@ -31,9 +31,9 @@ public class SmlMatcher {
 
         this.commandName = dataItem.commandName();
 
-        List<SmlInputMatcher> tempList = new ArrayList<>();
+        List<SmlSentenceMatcher> tempList = new ArrayList<>();
         for (String template : dataItem.templates()) {
-            tempList.add(new SmlInputMatcher(template));
+            tempList.add(new SmlSentenceMatcher(template));
         }
         this.inputMatcherList = tempList;
     }
@@ -46,7 +46,7 @@ public class SmlMatcher {
     public Optional<CliParseResult> tryParse(String commandText) throws CliParserException {
         Objects.requireNonNull(commandText);
 
-        for (SmlInputMatcher inputMatcher : inputMatcherList) {
+        for (SmlSentenceMatcher inputMatcher : inputMatcherList) {
             Optional<List<CliArgument>> optArgList = inputMatcher.parse(commandText);
 
             if (optArgList.isPresent()) {

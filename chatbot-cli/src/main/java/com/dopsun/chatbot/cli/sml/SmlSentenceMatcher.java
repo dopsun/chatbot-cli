@@ -16,7 +16,7 @@ import com.dopsun.chatbot.cli.CliParserException;
  * @author Dop Sun
  * @since 1.0.0
  */
-public class SmlInputMatcher {
+public class SmlSentenceMatcher {
     private static final String START_TAG = "${";
     private static final String STOP_TAG = "}";
 
@@ -25,7 +25,7 @@ public class SmlInputMatcher {
     /**
      * @param template
      */
-    public SmlInputMatcher(String template) {
+    public SmlSentenceMatcher(String template) {
         Objects.requireNonNull(template);
 
         int index = 0;
@@ -79,14 +79,14 @@ public class SmlInputMatcher {
             if (part instanceof ConstantPart) {
                 ConstantPart cpart = (ConstantPart) part;
                 StartAndLength startAndLength = cpart.find(commandText, index);
-                if (startAndLength.start < 0) {
+                if (startAndLength.start() < 0) {
                     // TODO: logging?
                     matched = false;
                     break;
                 }
 
                 if (lastVarPart != null) {
-                    String varValue = commandText.substring(index, startAndLength.start).trim();
+                    String varValue = commandText.substring(index, startAndLength.start()).trim();
                     if (varValue.length() == 0) {
                         argList.add(new CliArgumentImpl(lastVarPart.name, Optional.empty()));
                     } else {
@@ -141,29 +141,8 @@ public class SmlInputMatcher {
         }
     }
 
-    static class StartAndLength {
-        public static final StartAndLength NOT_FOUND = new StartAndLength();
-
-        private final int start;
-        private final int length;
-
-        public StartAndLength() {
-            this.start = -1;
-            this.length = -1;
-        }
-
-        public StartAndLength(int start, int length) {
-            this.start = start;
-            this.length = length;
-        }
-
-        public int stop() {
-            return start + length;
-        }
-    }
-
     static class ConstantPart extends Part {
-        final List<String> words = new ArrayList<>();
+        final List<SmlWordMatcher> wordMatchList = new ArrayList<>();
 
         public ConstantPart(String name) {
             super(name);
@@ -172,7 +151,7 @@ public class SmlInputMatcher {
             for (String word : wordArray) {
                 String temp = word.trim().toLowerCase();
                 if (temp.length() > 0) {
-                    words.add(temp);
+                    wordMatchList.add(new SmlWordMatcher(temp));
                 }
             }
         }
@@ -185,17 +164,17 @@ public class SmlInputMatcher {
             int start = -1;
             int lastWordStop = fromIndex;
 
-            for (String word : words) {
-                int index = inputLower.indexOf(word, lastWordStop);
-                if (index < 0) {
+            for (SmlWordMatcher wordMatcher : wordMatchList) {
+                StartAndLength wordLocation = wordMatcher.find(inputLower, lastWordStop);
+                if (wordLocation.isNotFound()) {
                     return StartAndLength.NOT_FOUND;
                 }
-                
+
                 if (start < 0) {
-                    start = index;
+                    start = wordLocation.start();
                 }
-                
-                lastWordStop = index + word.length();
+
+                lastWordStop = wordLocation.stop();
             }
 
             return new StartAndLength(start, lastWordStop - start);
