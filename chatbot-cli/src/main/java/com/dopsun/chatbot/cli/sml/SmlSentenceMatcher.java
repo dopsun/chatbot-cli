@@ -200,12 +200,19 @@ public class SmlSentenceMatcher {
 
             String inputLower = input.substring(fromIndex).toLowerCase();
             List<WordAndLocation> wordList = splitSentence(inputLower);
+
+            WordAndLocation first = null;
             for (SmlWordMatcher wordMatcher : wordMatchList) {
                 while (wordList.size() > 0) {
                     if (wordMatcher.match(wordList.get(0).word())) {
+                        if (first == null) {
+                            first = wordList.get(0);
+                        }
                         break;
                     }
+
                     wordList.remove(0);
+
                 }
 
                 if (wordList.size() == 0) {
@@ -213,7 +220,19 @@ public class SmlSentenceMatcher {
                 }
             }
 
-            return wordList.get(0).location().offset(fromIndex);
+            if (first == null) {
+                first = wordList.get(0);
+            }
+            
+            if (first == null) {
+                return wordList.get(0).location().offset(fromIndex);
+            } else {
+                if (first == wordList.get(0)) {
+                    return wordList.get(0).location().offset(fromIndex);
+                } else {
+                    return first.location().merge(wordList.get(0).location()).offset(fromIndex);
+                }
+            }
         }
     }
 

@@ -69,4 +69,16 @@ public class StartAndLength {
     public StartAndLength offset(int count) {
         return new StartAndLength(start + count, length);
     }
+
+    /**
+     * @param another
+     * @return
+     */
+    public StartAndLength merge(StartAndLength another) {
+        if (start < another.start) {
+            return new StartAndLength(start, another.stop() - start);
+        } else {
+            return new StartAndLength(another.start, this.stop() - another.start);
+        }
+    }
 }
