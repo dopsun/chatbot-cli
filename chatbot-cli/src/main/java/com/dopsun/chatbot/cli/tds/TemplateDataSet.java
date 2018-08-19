@@ -32,6 +32,10 @@ public class TemplateDataSet implements DataSet {
 
         try (Stream<String> stream = Files.lines(path)) {
             stream.forEach(line -> {
+                if (line.startsWith("#")) {
+                    return;
+                }
+
                 int pos = line.indexOf('=');
                 if (pos < 0) {
                     return;

@@ -17,6 +17,45 @@ import com.dopsun.chatbot.cli.CliParserException;
  * @since 1.0.0
  */
 public class SmlSentenceMatcher {
+    /**
+     * @param sentence
+     * @return
+     */
+    public static List<WordAndLocation> splitSentence(String sentence) {
+        Objects.requireNonNull(sentence);
+
+        List<WordAndLocation> list = new ArrayList<>();
+
+        String temp = sentence.toLowerCase();
+        int wordStart = -1;
+        for (int index = 0; index < temp.length(); index++) {
+            char c = temp.charAt(index);
+            if (wordStart < 0) {
+                if (Character.isWhitespace(c)) {
+                    continue;
+                }
+
+                wordStart = index;
+            } else {
+                if (Character.isWhitespace(c)) {
+                    StartAndLength location = new StartAndLength(wordStart, index - wordStart);
+                    String word = temp.substring(wordStart, index);
+                    list.add(new WordAndLocation(word, location));
+
+                    wordStart = -1;
+                }
+            }
+        }
+
+        if (wordStart >= 0) {
+            StartAndLength location = new StartAndLength(wordStart, temp.length() - wordStart);
+            String word = temp.substring(wordStart);
+            list.add(new WordAndLocation(word, location));
+        }
+
+        return list;
+    }
+
     private static final String START_TAG = "${";
     private static final String STOP_TAG = "}";
 
@@ -159,25 +198,22 @@ public class SmlSentenceMatcher {
         public StartAndLength find(String input, int fromIndex) {
             Objects.requireNonNull(input);
 
-            String inputLower = input.toLowerCase();
-
-            int start = -1;
-            int lastWordStop = fromIndex;
-
+            String inputLower = input.substring(fromIndex).toLowerCase();
+            List<WordAndLocation> wordList = splitSentence(inputLower);
             for (SmlWordMatcher wordMatcher : wordMatchList) {
-                StartAndLength wordLocation = wordMatcher.find(inputLower, lastWordStop);
-                if (wordLocation.isNotFound()) {
+                while (wordList.size() > 0) {
+                    if (wordMatcher.match(wordList.get(0).word())) {
+                        break;
+                    }
+                    wordList.remove(0);
+                }
+
+                if (wordList.size() == 0) {
                     return StartAndLength.NOT_FOUND;
                 }
-
-                if (start < 0) {
-                    start = wordLocation.start();
-                }
-
-                lastWordStop = wordLocation.stop();
             }
 
-            return new StartAndLength(start, lastWordStop - start);
+            return wordList.get(0).location().offset(fromIndex);
         }
     }
 

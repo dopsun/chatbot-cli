@@ -23,20 +23,10 @@ public class SmlWordMatcher {
     }
 
     /**
-     * @param input
-     * @param fromIndex
-     * @return
+     * @param word
+     * @return <code>true</code> if word matches.
      */
-    public StartAndLength find(String input, int fromIndex) {
-        Objects.requireNonNull(input);
-
-        String inputLower = input.toLowerCase();
-
-        int index = inputLower.indexOf(wordLower, fromIndex);
-        if (index < 0) {
-            return StartAndLength.NOT_FOUND;
-        }
-
-        return new StartAndLength(index, wordLower.length());
+    public boolean match(String word) {
+        return wordLower.equalsIgnoreCase(word);
     }
 }

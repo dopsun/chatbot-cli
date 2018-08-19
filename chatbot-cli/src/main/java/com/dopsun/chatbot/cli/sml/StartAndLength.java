@@ -61,4 +61,12 @@ public class StartAndLength {
     public int stop() {
         return start + length;
     }
+
+    /**
+     * @param count
+     * @return
+     */
+    public StartAndLength offset(int count) {
+        return new StartAndLength(start + count, length);
+    }
 }
