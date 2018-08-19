@@ -4,7 +4,7 @@
 A simple ChatBot command line parser, trained with templates.
 
 * It's designed for Command Line Interface (CLI) for ChatBot, with predefined list of command syntax.
-** This is *NOT* a NLP (Natural Language Processing) parser.
+ * This is *NOT* a NLP (Natural Language Processing) parser.
 * It's *smart*, but predictable.
 
 # Train
