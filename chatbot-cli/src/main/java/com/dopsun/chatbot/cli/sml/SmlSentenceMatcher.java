@@ -172,7 +172,6 @@ final class SmlSentenceMatcher {
 
         CliCommandImpl cliCommand = new CliCommandImpl(commandName, template, argList);
 
-        // FIXME hard coded rank.
         CommandAndRank commandAndRank = new CommandAndRank(cliCommand, rankCalc.rank());
 
         return Optional.of(commandAndRank);
