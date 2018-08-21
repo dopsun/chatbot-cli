@@ -10,7 +10,6 @@ import java.util.Objects;
 import java.util.Optional;
 
 import com.dopsun.chatbot.cli.CliArgument;
-import com.dopsun.chatbot.cli.CliParserException;
 
 /**
  * @author Dop Sun
@@ -98,9 +97,8 @@ public class SmlSentenceMatcher {
     /**
      * @param commandText
      * @return
-     * @throws CliParserException
      */
-    public Optional<List<CliArgument>> parse(String commandText) throws CliParserException {
+    public Optional<List<CliArgument>> parse(String commandText) {
         Objects.requireNonNull(commandText);
 
         int index = 0;
@@ -223,7 +221,7 @@ public class SmlSentenceMatcher {
             if (first == null) {
                 first = wordList.get(0);
             }
-            
+
             if (first == null) {
                 return wordList.get(0).location().offset(fromIndex);
             } else {

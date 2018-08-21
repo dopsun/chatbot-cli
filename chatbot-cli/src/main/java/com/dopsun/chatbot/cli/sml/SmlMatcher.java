@@ -12,7 +12,6 @@ import java.util.Optional;
 import com.dopsun.chatbot.cli.CliArgument;
 import com.dopsun.chatbot.cli.CliCommand;
 import com.dopsun.chatbot.cli.CliParseResult;
-import com.dopsun.chatbot.cli.CliParserException;
 import com.dopsun.chatbot.cli.tds.DataItem;
 
 /**
@@ -41,9 +40,8 @@ public class SmlMatcher {
     /**
      * @param commandText
      * @return
-     * @throws CliParserException
      */
-    public Optional<CliParseResult> tryParse(String commandText) throws CliParserException {
+    public Optional<CliParseResult> tryParse(String commandText) {
         Objects.requireNonNull(commandText);
 
         for (SmlSentenceMatcher inputMatcher : inputMatcherList) {

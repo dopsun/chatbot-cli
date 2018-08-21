@@ -43,6 +43,7 @@ public class SmlCliParserTest {
 
         SmlCliParserBuilder builder = new SmlCliParserBuilder();
         builder.add(dataSet);
+        builder.setLogger(System.out::println);
         cliParser = builder.build();
     }
 

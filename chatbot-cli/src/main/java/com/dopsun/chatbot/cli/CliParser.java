@@ -12,9 +12,12 @@ import java.util.Optional;
  */
 public interface CliParser {
     /**
+     * Tries to parse the <code>commandText</code>. Returns {@link Optional#empty()} if not
+     * recognized.
+     * 
      * @param commandText
-     * @return
-     * @throws CliParserException
+     *            command text to parse.
+     * @return returns {@link Optional#empty()} if <code>commandText</code> not recognized.
      */
-    Optional<CliParseResult> tryParse(String commandText) throws CliParserException;
+    Optional<CliParseResult> tryParse(String commandText);
 }

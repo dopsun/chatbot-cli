@@ -11,7 +11,6 @@ import java.util.Optional;
 
 import com.dopsun.chatbot.cli.CliParseResult;
 import com.dopsun.chatbot.cli.CliParser;
-import com.dopsun.chatbot.cli.CliParserException;
 import com.dopsun.chatbot.cli.tds.DataItem;
 import com.dopsun.chatbot.cli.tds.DataSet;
 
@@ -20,13 +19,17 @@ import com.dopsun.chatbot.cli.tds.DataSet;
  * @since 1.0.0
  */
 public class SmlCliParser implements CliParser {
+    private final ParserTrace trace;
     private final List<SmlMatcher> matcherList = new ArrayList<>();
 
     /**
      * @param dataSets
      */
-    public SmlCliParser(List<DataSet> dataSets) {
+    SmlCliParser(List<DataSet> dataSets, ParserTrace trace) {
         Objects.requireNonNull(dataSets);
+        Objects.requireNonNull(trace);
+
+        this.trace = trace;
 
         for (DataSet ds : dataSets) {
             for (DataItem di : ds.items()) {
@@ -37,11 +40,20 @@ public class SmlCliParser implements CliParser {
     }
 
     /**
+     * @return
+     */
+    ParserTrace trace() {
+        return this.trace;
+    }
+
+    /**
      * FIXME: if matchList is large, then ForkJoinPool can be used.
      */
     @Override
-    public Optional<CliParseResult> tryParse(String commandText) throws CliParserException {
+    public Optional<CliParseResult> tryParse(String commandText) {
         Objects.requireNonNull(commandText);
+
+        trace.enterMethod(this, "tryParse", commandText);
 
         for (SmlMatcher matcher : matcherList) {
             Optional<CliParseResult> optResult = matcher.tryParse(commandText);
