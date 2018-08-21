@@ -107,6 +107,8 @@ final class SmlSentenceMatcher {
     public Optional<CommandAndRank> parse(String commandText) {
         Objects.requireNonNull(commandText);
 
+        RankCalculator rankCalc = new RankCalculator();
+
         int index = 0;
 
         List<CliArgument> argList = new ArrayList<>();
@@ -121,7 +123,7 @@ final class SmlSentenceMatcher {
 
             if (part instanceof ConstantPart) {
                 ConstantPart cpart = (ConstantPart) part;
-                StartAndLength startAndLength = cpart.find(commandText, index);
+                StartAndLength startAndLength = cpart.find(rankCalc, commandText, index);
                 if (startAndLength.start() < 0) {
                     // TODO: logging?
                     matched = false;
@@ -169,7 +171,7 @@ final class SmlSentenceMatcher {
         CliCommandImpl cliCommand = new CliCommandImpl(commandName, argList);
 
         // FIXME hard coded rank.
-        CommandAndRank commandAndRank = new CommandAndRank(cliCommand, 0);
+        CommandAndRank commandAndRank = new CommandAndRank(cliCommand, rankCalc.rank());
 
         return Optional.of(commandAndRank);
     }
@@ -204,24 +206,30 @@ final class SmlSentenceMatcher {
             }
         }
 
-        public StartAndLength find(String input, int fromIndex) {
+        public StartAndLength find(RankCalculator rankCalc, String input, int fromIndex) {
             Objects.requireNonNull(input);
 
             String inputLower = input.substring(fromIndex).toLowerCase();
             List<WordAndLocation> wordList = splitSentence(inputLower);
 
             WordAndLocation first = null;
+            WordAndLocation last = null;
+
             for (SmlWordMatcher wordMatcher : wordMatchList) {
                 while (wordList.size() > 0) {
                     if (wordMatcher.match(wordList.get(0).word())) {
                         if (first == null) {
                             first = wordList.get(0);
+                        } else {
+                            last = wordList.get(0);
                         }
+
+                        wordList.remove(0);
                         break;
                     }
 
                     wordList.remove(0);
-
+                    rankCalc.skipConstantWord(1);
                 }
 
                 if (wordList.size() == 0) {
@@ -229,18 +237,10 @@ final class SmlSentenceMatcher {
                 }
             }
 
-            if (first == null) {
-                first = wordList.get(0);
-            }
-
-            if (first == null) {
-                return wordList.get(0).location().offset(fromIndex);
+            if (last == null) {
+                return first.location().offset(fromIndex);
             } else {
-                if (first == wordList.get(0)) {
-                    return wordList.get(0).location().offset(fromIndex);
-                } else {
-                    return first.location().merge(wordList.get(0).location()).offset(fromIndex);
-                }
+                return first.location().merge(last.location()).offset(fromIndex);
             }
         }
     }

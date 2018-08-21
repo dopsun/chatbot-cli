@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import com.dopsun.chatbot.cli.CliParseResult;
 import com.dopsun.chatbot.cli.CommandAndRank;
 import com.dopsun.chatbot.cli.tds.DataItem;
 
@@ -39,22 +38,18 @@ final class SmlCommandMatcher {
      * @param commandText
      * @return
      */
-    public Optional<CliParseResult> tryParse(String commandText) {
+    public List<CommandAndRank> tryParse(String commandText) {
         Objects.requireNonNull(commandText);
 
+        List<CommandAndRank> list = new ArrayList<>();
         for (SmlSentenceMatcher inputMatcher : inputMatcherList) {
             Optional<CommandAndRank> optCommandAndRank = inputMatcher.parse(commandText);
 
             if (optCommandAndRank.isPresent()) {
-                ParseResultBuilder builder = ParseResultBuilder.create();
-
-                // FIXME: hardcode the rank value.
-                builder.add(optCommandAndRank.get());
-
-                return builder.build();
+                list.add(optCommandAndRank.get());
             }
         }
 
-        return Optional.empty();
+        return list;
     }
 }

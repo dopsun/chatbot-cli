@@ -11,6 +11,7 @@ import java.util.Optional;
 
 import com.dopsun.chatbot.cli.CliParseResult;
 import com.dopsun.chatbot.cli.CliParser;
+import com.dopsun.chatbot.cli.CommandAndRank;
 import com.dopsun.chatbot.cli.tds.DataItem;
 import com.dopsun.chatbot.cli.tds.DataSet;
 
@@ -55,14 +56,17 @@ final class SmlCliParser implements CliParser {
 
         trace.enterMethod(this, "tryParse", commandText);
 
+        ParseResultBuilder builder = ParseResultBuilder.create();
+
         for (SmlCommandMatcher matcher : matcherList) {
-            Optional<CliParseResult> optResult = matcher.tryParse(commandText);
-            if (optResult.isPresent()) {
-                return optResult;
+            List<CommandAndRank> commandList = matcher.tryParse(commandText);
+
+            for (CommandAndRank commandAndRank : commandList) {
+                builder.add(commandAndRank);
             }
         }
 
-        return Optional.empty();
+        return builder.build();
     }
 
 }
