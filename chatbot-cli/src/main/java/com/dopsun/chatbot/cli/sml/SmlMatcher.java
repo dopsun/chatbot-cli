@@ -48,29 +48,16 @@ public class SmlMatcher {
             Optional<List<CliArgument>> optArgList = inputMatcher.parse(commandText);
 
             if (optArgList.isPresent()) {
-                CliParseResultImpl cliParseResult = new CliParseResultImpl(this.commandName,
-                        optArgList.get());
-                return Optional.of(cliParseResult);
+                ParseResultBuilder builder = ParseResultBuilder.create();
+
+                // FIXME: hardcode the rank value.
+                builder.add(new CliCommandImpl(commandName, optArgList.get()), 0);
+
+                return builder.build();
             }
         }
 
         return Optional.empty();
-    }
-
-    static class CliParseResultImpl implements CliParseResult {
-        private final CliCommand command;
-
-        public CliParseResultImpl(String commandName, List<CliArgument> argList) {
-            Objects.requireNonNull(commandName);
-            Objects.requireNonNull(argList);
-
-            this.command = new CliCommandImpl(commandName, argList);
-        }
-
-        @Override
-        public CliCommand command() {
-            return command;
-        }
     }
 
     static class CliCommandImpl implements CliCommand {
