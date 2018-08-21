@@ -18,9 +18,9 @@ import com.dopsun.chatbot.cli.tds.DataSet;
  * @author Dop Sun
  * @since 1.0.0
  */
-public class SmlCliParser implements CliParser {
+final class SmlCliParser implements CliParser {
     private final ParserTrace trace;
-    private final List<SmlMatcher> matcherList = new ArrayList<>();
+    private final List<SmlCommandMatcher> matcherList = new ArrayList<>();
 
     /**
      * @param dataSets
@@ -33,7 +33,7 @@ public class SmlCliParser implements CliParser {
 
         for (DataSet ds : dataSets) {
             for (DataItem di : ds.items()) {
-                SmlMatcher matcher = new SmlMatcher(di);
+                SmlCommandMatcher matcher = new SmlCommandMatcher(di);
                 matcherList.add(matcher);
             }
         }
@@ -55,7 +55,7 @@ public class SmlCliParser implements CliParser {
 
         trace.enterMethod(this, "tryParse", commandText);
 
-        for (SmlMatcher matcher : matcherList) {
+        for (SmlCommandMatcher matcher : matcherList) {
             Optional<CliParseResult> optResult = matcher.tryParse(commandText);
             if (optResult.isPresent()) {
                 return optResult;

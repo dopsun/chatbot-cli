@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
  * @author Dop Sun
  * @since 1.0.0
  */
-public class SmlWordMatcher {
+final class SmlWordMatcher {
     private static String compile(String input) {
         int index = input.indexOf('[');
         if (index >= 0) {

@@ -10,7 +10,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.dopsun.chatbot.cli.CliCommand;
 import com.dopsun.chatbot.cli.CliParseResult;
 import com.dopsun.chatbot.cli.CommandAndRank;
 
@@ -40,10 +39,10 @@ final class ParseResultBuilder {
         return Optional.of(new ParseResultImpl(this));
     }
 
-    public void add(CliCommand command, int rank) {
-        Objects.requireNonNull(command);
+    public void add(CommandAndRank commandAndRank) {
+        Objects.requireNonNull(commandAndRank);
 
-        this.commands.add(new CommandAndRank(command, rank));
+        this.commands.add(commandAndRank);
     }
 
     static class ParseResultImpl implements CliParseResult {

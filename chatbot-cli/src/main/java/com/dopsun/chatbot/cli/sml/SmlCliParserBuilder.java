@@ -20,7 +20,7 @@ import com.dopsun.chatbot.cli.tds.DataSet;
  * @author Dop Sun
  * @since 1.0.0
  */
-public class SmlCliParserBuilder implements CliParserBuilder {
+public final class SmlCliParserBuilder implements CliParserBuilder {
     private final List<DataSet> dataSets = new ArrayList<>();
 
     @Nullable

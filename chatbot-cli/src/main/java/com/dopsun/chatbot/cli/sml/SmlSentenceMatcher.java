@@ -10,17 +10,18 @@ import java.util.Objects;
 import java.util.Optional;
 
 import com.dopsun.chatbot.cli.CliArgument;
+import com.dopsun.chatbot.cli.CommandAndRank;
 
 /**
  * @author Dop Sun
  * @since 1.0.0
  */
-public class SmlSentenceMatcher {
+final class SmlSentenceMatcher {
     /**
      * @param sentence
      * @return
      */
-    public static List<WordAndLocation> splitSentence(String sentence) {
+    static List<WordAndLocation> splitSentence(String sentence) {
         Objects.requireNonNull(sentence);
 
         List<WordAndLocation> list = new ArrayList<>();
@@ -58,13 +59,18 @@ public class SmlSentenceMatcher {
     private static final String START_TAG = "${";
     private static final String STOP_TAG = "}";
 
+    private final String commandName;
     private final List<Part> partList = new ArrayList<>();
 
     /**
+     * @param commandName
      * @param template
      */
-    public SmlSentenceMatcher(String template) {
+    public SmlSentenceMatcher(String commandName, String template) {
+        Objects.requireNonNull(commandName);
         Objects.requireNonNull(template);
+
+        this.commandName = commandName;
 
         int index = 0;
         while (index < template.length()) {
@@ -98,7 +104,7 @@ public class SmlSentenceMatcher {
      * @param commandText
      * @return
      */
-    public Optional<List<CliArgument>> parse(String commandText) {
+    public Optional<CommandAndRank> parse(String commandText) {
         Objects.requireNonNull(commandText);
 
         int index = 0;
@@ -160,7 +166,12 @@ public class SmlSentenceMatcher {
             return Optional.empty();
         }
 
-        return Optional.of(argList);
+        CliCommandImpl cliCommand = new CliCommandImpl(commandName, argList);
+
+        // FIXME hard coded rank.
+        CommandAndRank commandAndRank = new CommandAndRank(cliCommand, 0);
+
+        return Optional.of(commandAndRank);
     }
 
     static abstract class Part {
