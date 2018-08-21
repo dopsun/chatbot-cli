@@ -60,6 +60,7 @@ final class SmlSentenceMatcher {
     private static final String STOP_TAG = "}";
 
     private final String commandName;
+    private final String template;
     private final List<Part> partList = new ArrayList<>();
 
     /**
@@ -71,6 +72,7 @@ final class SmlSentenceMatcher {
         Objects.requireNonNull(template);
 
         this.commandName = commandName;
+        this.template = template;
 
         int index = 0;
         while (index < template.length()) {
@@ -168,7 +170,7 @@ final class SmlSentenceMatcher {
             return Optional.empty();
         }
 
-        CliCommandImpl cliCommand = new CliCommandImpl(commandName, argList);
+        CliCommandImpl cliCommand = new CliCommandImpl(commandName, template, argList);
 
         // FIXME hard coded rank.
         CommandAndRank commandAndRank = new CommandAndRank(cliCommand, rankCalc.rank());

@@ -19,5 +19,10 @@ public interface CliCommand {
     /**
      * @return
      */
+    String template();
+
+    /**
+     * @return
+     */
     List<CliArgument> arguments();
 }
