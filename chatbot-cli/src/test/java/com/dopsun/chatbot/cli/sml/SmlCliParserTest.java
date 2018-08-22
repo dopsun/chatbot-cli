@@ -22,6 +22,8 @@ import com.dopsun.chatbot.cli.CliParser;
 import com.dopsun.chatbot.cli.CliParserException;
 import com.dopsun.chatbot.cli.sml.PropertiesScript.ScriptCase;
 import com.dopsun.chatbot.cli.tds.TemplateDataSet;
+import com.dopsun.chatbot.cli.tds.TrainingSet;
+import com.dopsun.chatbot.cli.tds.TrainingSetReader;
 
 /**
  * @author Dop Sun
@@ -32,14 +34,21 @@ public class SmlCliParserTest {
     private static CliParser cliParser;
 
     @BeforeClass
-    public static void prepareParser() throws URISyntaxException {
+    public static void prepareParser() throws URISyntaxException, IOException {
         URL url = ClassLoader.getSystemResource("input/template-data.properties");
         Path dsPath = Paths.get(url.toURI());
 
         TemplateDataSet dataSet = new TemplateDataSet(dsPath);
 
+        URL tsUrl = ClassLoader.getSystemResource("input/training-data.yml");
+        Path tsPath = Paths.get(tsUrl.toURI());
+        TrainingSetReader reader = new TrainingSetReader();
+        TrainingSet trainingSet = reader.read(tsPath);
+
         SmlCliParserBuilder builder = new SmlCliParserBuilder();
         builder.add(dataSet);
+        builder.addTrainingSet(trainingSet);
+
         builder.setLogger(System.out::println);
         cliParser = builder.build();
     }

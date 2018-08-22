@@ -1,0 +1,8 @@
+data-set:
+- input: get contact xyz
+  feedback: NEUTRAL
+  command: get_contact
+  template: get contact ${contact-hint}
+  arguments:
+  - name: contact-hint
+    value: xyz

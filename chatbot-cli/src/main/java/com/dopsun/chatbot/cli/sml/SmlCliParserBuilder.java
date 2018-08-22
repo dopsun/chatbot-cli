@@ -15,6 +15,7 @@ import com.dopsun.chatbot.cli.CliParser;
 import com.dopsun.chatbot.cli.CliParserBuilder;
 import com.dopsun.chatbot.cli.TraceListener;
 import com.dopsun.chatbot.cli.tds.DataSet;
+import com.dopsun.chatbot.cli.tds.TrainingSet;
 
 /**
  * @author Dop Sun
@@ -22,6 +23,7 @@ import com.dopsun.chatbot.cli.tds.DataSet;
  */
 public final class SmlCliParserBuilder implements CliParserBuilder {
     private final List<DataSet> dataSets = new ArrayList<>();
+    private final List<TrainingSet> trainingSets = new ArrayList<>();
 
     @Nullable
     private TraceListener traceListener;
@@ -40,6 +42,15 @@ public final class SmlCliParserBuilder implements CliParserBuilder {
         Objects.requireNonNull(dataSet);
 
         this.dataSets.add(dataSet);
+    }
+
+    /**
+     * @param trainingSet
+     */
+    public void addTrainingSet(TrainingSet trainingSet) {
+        Objects.requireNonNull(trainingSet);
+
+        this.trainingSets.add(trainingSet);
     }
 
     /**
