@@ -5,14 +5,11 @@
 package com.dopsun.chatbot.cli.sml;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
-import java.util.Properties;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -36,7 +33,7 @@ public class SmlCliParserTest {
 
     @BeforeClass
     public static void prepareParser() throws URISyntaxException {
-        URL url = ClassLoader.getSystemResource("input/training-data.properties");
+        URL url = ClassLoader.getSystemResource("input/template-data.properties");
         Path dsPath = Paths.get(url.toURI());
 
         TemplateDataSet dataSet = new TemplateDataSet(dsPath);
@@ -45,17 +42,6 @@ public class SmlCliParserTest {
         builder.add(dataSet);
         builder.setLogger(System.out::println);
         cliParser = builder.build();
-    }
-
-    public static void loadScript() throws URISyntaxException, IOException {
-        URL url = ClassLoader.getSystemResource("input/training-data.properties");
-        Path dsPath = Paths.get(url.toURI());
-
-        try (Reader reader = Files.newBufferedReader(dsPath)) {
-            Properties props = new Properties();
-            props.load(reader);
-
-        }
     }
 
     public static String parseResultToString(CliParseResult parseResult) {
