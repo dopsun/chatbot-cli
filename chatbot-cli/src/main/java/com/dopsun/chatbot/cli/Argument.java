@@ -4,13 +4,20 @@
 
 package com.dopsun.chatbot.cli;
 
+import java.util.Optional;
+
 /**
  * @author Dop Sun
  * @since 1.0.0
  */
-public interface CliParserBuilder {
+public interface Argument {
     /**
      * @return
      */
-    CliParser build();
+    String name();
+
+    /**
+     * @return
+     */
+    Optional<String> value();
 }

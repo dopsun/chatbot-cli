@@ -5,16 +5,16 @@
 package com.dopsun.chatbot.cli;
 
 /**
- * Logger to trace the {@link CliParser} internal work.
+ * Logger to trace the {@link Parser} internal work.
  * 
  * <p>
  * <code>chatbot-cli</code> is <i>NOT</i> depends on any third party libraries by default, including
  * popular logging frameworks. So, if required, application can provide this logger while building
- * {@link CliParser}.
+ * {@link Parser}.
  * </p>
  * <p>
  * This can easily adapted to an actual logger. And if this is the case, it's recommended to create
- * a dedicated log instance using {@link CliParser} class. For example, with slf4j:
+ * a dedicated log instance using {@link Parser} class. For example, with slf4j:
  * </p>
  * 
  * <pre>

@@ -4,7 +4,7 @@
 
 package com.dopsun.chatbot.cli.input;
 
-import com.dopsun.chatbot.cli.CliCommand;
+import com.dopsun.chatbot.cli.Command;
 
 /**
  * @author Dop Sun
@@ -19,7 +19,7 @@ public interface TrainingItem {
     /**
      * @return
      */
-    CliCommand command();
+    Command command();
 
     /**
      * @return

@@ -11,8 +11,8 @@ import java.util.Optional;
 
 import javax.annotation.Nullable;
 
-import com.dopsun.chatbot.cli.CliParser;
-import com.dopsun.chatbot.cli.CliParserBuilder;
+import com.dopsun.chatbot.cli.Parser;
+import com.dopsun.chatbot.cli.ParserBuilder;
 import com.dopsun.chatbot.cli.TraceListener;
 import com.dopsun.chatbot.cli.input.CommandSet;
 import com.dopsun.chatbot.cli.input.TrainingSet;
@@ -21,7 +21,7 @@ import com.dopsun.chatbot.cli.input.TrainingSet;
  * @author Dop Sun
  * @since 1.0.0
  */
-public final class SmlCliParserBuilder implements CliParserBuilder {
+public final class SmlCliParserBuilder implements ParserBuilder {
     private final List<CommandSet> commandSet = new ArrayList<>();
     private final List<TrainingSet> trainingSets = new ArrayList<>();
 
@@ -29,7 +29,7 @@ public final class SmlCliParserBuilder implements CliParserBuilder {
     private TraceListener traceListener;
 
     @Override
-    public CliParser build() {
+    public Parser build() {
         ParserTrace parserTrace = new ParserTrace(Optional.ofNullable(traceListener));
         SmlCliParser parser = new SmlCliParser(commandSet, parserTrace);
         return parser;

@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import com.dopsun.chatbot.cli.CliParseResult;
-import com.dopsun.chatbot.cli.CliParser;
+import com.dopsun.chatbot.cli.ParseResult;
+import com.dopsun.chatbot.cli.Parser;
 import com.dopsun.chatbot.cli.CommandAndRank;
 import com.dopsun.chatbot.cli.input.CommandItem;
 import com.dopsun.chatbot.cli.input.CommandSet;
@@ -19,7 +19,7 @@ import com.dopsun.chatbot.cli.input.CommandSet;
  * @author Dop Sun
  * @since 1.0.0
  */
-final class SmlCliParser implements CliParser {
+final class SmlCliParser implements Parser {
     private final ParserTrace trace;
     private final List<SmlCommandMatcher> matcherList = new ArrayList<>();
 
@@ -51,7 +51,7 @@ final class SmlCliParser implements CliParser {
      * FIXME: if matchList is large, then ForkJoinPool can be used.
      */
     @Override
-    public Optional<CliParseResult> tryParse(String commandText) {
+    public Optional<ParseResult> tryParse(String commandText) {
         Objects.requireNonNull(commandText);
 
         trace.enterMethod(this, "tryParse", commandText);

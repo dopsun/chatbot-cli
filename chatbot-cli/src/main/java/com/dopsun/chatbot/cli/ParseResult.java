@@ -10,11 +10,11 @@ import java.util.List;
  * @author Dop Sun
  * @since 1.0.0
  */
-public interface CliParseResult {
+public interface ParseResult {
     /**
      * @return first command matched.
      */
-    default CliCommand command() {
+    default Command command() {
         return allCommands().get(0).command();
     }
 

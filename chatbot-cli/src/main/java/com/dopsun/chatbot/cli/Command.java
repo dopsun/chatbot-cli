@@ -4,13 +4,13 @@
 
 package com.dopsun.chatbot.cli;
 
-import java.util.Optional;
+import java.util.List;
 
 /**
  * @author Dop Sun
  * @since 1.0.0
  */
-public interface CliArgument {
+public interface Command {
     /**
      * @return
      */
@@ -19,5 +19,10 @@ public interface CliArgument {
     /**
      * @return
      */
-    Optional<String> value();
+    String template();
+
+    /**
+     * @return
+     */
+    List<Argument> arguments();
 }

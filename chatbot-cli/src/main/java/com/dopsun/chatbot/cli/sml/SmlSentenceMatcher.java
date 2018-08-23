@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import com.dopsun.chatbot.cli.CliArgument;
+import com.dopsun.chatbot.cli.Argument;
 import com.dopsun.chatbot.cli.CommandAndRank;
 
 /**
@@ -113,7 +113,7 @@ final class SmlSentenceMatcher {
 
         int index = 0;
 
-        List<CliArgument> argList = new ArrayList<>();
+        List<Argument> argList = new ArrayList<>();
 
         VariablePart lastVarPart = null;
 
@@ -252,7 +252,7 @@ final class SmlSentenceMatcher {
         }
     }
 
-    static class CliArgumentImpl implements CliArgument {
+    static class CliArgumentImpl implements Argument {
         private final String name;
         private final Optional<String> value;
 

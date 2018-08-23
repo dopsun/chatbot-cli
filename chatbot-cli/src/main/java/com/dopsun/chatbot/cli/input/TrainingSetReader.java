@@ -14,8 +14,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import com.dopsun.chatbot.cli.CliArgument;
-import com.dopsun.chatbot.cli.CliCommand;
+import com.dopsun.chatbot.cli.Argument;
+import com.dopsun.chatbot.cli.Command;
 
 /**
  * @author Dop Sun
@@ -129,7 +129,7 @@ public class TrainingSetReader {
         private String input;
         private String commandName;
         private String commandTemplate;
-        private List<CliArgument> arguments = new ArrayList<>();
+        private List<Argument> arguments = new ArrayList<>();
         private TrainingFeedback feedback;
 
         private String lastArgumentName;
@@ -145,7 +145,7 @@ public class TrainingSetReader {
 
     static class TrainingItemImpl implements TrainingItem {
         private final String input;
-        private final CliCommand command;
+        private final Command command;
         private final TrainingFeedback feedback;
 
         public TrainingItemImpl(TrainingItemBuilder builder) {
@@ -162,7 +162,7 @@ public class TrainingSetReader {
         }
 
         @Override
-        public CliCommand command() {
+        public Command command() {
             return command;
         }
 
@@ -172,11 +172,11 @@ public class TrainingSetReader {
         }
     }
 
-    static class CliCommandImpl implements CliCommand {
+    static class CliCommandImpl implements Command {
 
         private final String name;
         private final String template;
-        private final List<CliArgument> arguments;
+        private final List<Argument> arguments;
 
         public CliCommandImpl(TrainingItemBuilder builder) {
             Objects.requireNonNull(builder);
@@ -197,13 +197,13 @@ public class TrainingSetReader {
         }
 
         @Override
-        public List<CliArgument> arguments() {
+        public List<Argument> arguments() {
             return arguments;
         }
 
     }
 
-    static class CliArgumentImpl implements CliArgument {
+    static class CliArgumentImpl implements Argument {
         private final String name;
         private final Optional<String> value;
 

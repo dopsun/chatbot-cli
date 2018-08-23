@@ -7,19 +7,19 @@ package com.dopsun.chatbot.cli.sml;
 import java.util.List;
 import java.util.Objects;
 
-import com.dopsun.chatbot.cli.CliArgument;
-import com.dopsun.chatbot.cli.CliCommand;
+import com.dopsun.chatbot.cli.Argument;
+import com.dopsun.chatbot.cli.Command;
 
 /**
  * @author Dop Sun
  * @since 1.0.0
  */
-final class CliCommandImpl implements CliCommand {
+final class CliCommandImpl implements Command {
     private final String name;
     private final String template;
-    private final List<CliArgument> argList;
+    private final List<Argument> argList;
 
-    public CliCommandImpl(String name, String template, List<CliArgument> argList) {
+    public CliCommandImpl(String name, String template, List<Argument> argList) {
         Objects.requireNonNull(name);
         Objects.requireNonNull(template);
         Objects.requireNonNull(argList);
@@ -42,7 +42,7 @@ final class CliCommandImpl implements CliCommand {
     }
 
     @Override
-    public List<CliArgument> arguments() {
+    public List<Argument> arguments() {
         return argList;
     }
 

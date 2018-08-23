@@ -13,8 +13,8 @@ import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.Objects;
 
-import com.dopsun.chatbot.cli.CliArgument;
-import com.dopsun.chatbot.cli.CliCommand;
+import com.dopsun.chatbot.cli.Argument;
+import com.dopsun.chatbot.cli.Command;
 
 /**
  * @author Dop Sun
@@ -59,7 +59,7 @@ public class TrainingSetWriter implements AutoCloseable {
      * @param feedback
      * @throws IOException
      */
-    public void write(String input, CliCommand command, TrainingFeedback feedback)
+    public void write(String input, Command command, TrainingFeedback feedback)
             throws IOException {
         writer.write("- input: ");
         writer.write(input);
@@ -73,11 +73,11 @@ public class TrainingSetWriter implements AutoCloseable {
         writer.write("\n  template: ");
         writer.write(command.template());
 
-        List<CliArgument> args = command.arguments();
+        List<Argument> args = command.arguments();
         if (!args.isEmpty()) {
             writer.write("\n  arguments: ");
 
-            for (CliArgument arg : args) {
+            for (Argument arg : args) {
                 writer.write("\n  - name: ");
                 writer.write(arg.name());
 

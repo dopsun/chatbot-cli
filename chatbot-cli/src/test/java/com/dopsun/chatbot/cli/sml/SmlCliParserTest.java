@@ -15,11 +15,11 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.dopsun.chatbot.cli.CliArgument;
-import com.dopsun.chatbot.cli.CliCommand;
-import com.dopsun.chatbot.cli.CliParseResult;
-import com.dopsun.chatbot.cli.CliParser;
-import com.dopsun.chatbot.cli.CliParserException;
+import com.dopsun.chatbot.cli.Argument;
+import com.dopsun.chatbot.cli.Command;
+import com.dopsun.chatbot.cli.ParseResult;
+import com.dopsun.chatbot.cli.Parser;
+import com.dopsun.chatbot.cli.ParserException;
 import com.dopsun.chatbot.cli.input.CommandSet;
 import com.dopsun.chatbot.cli.input.CommandSetReader;
 import com.dopsun.chatbot.cli.input.TrainingSet;
@@ -32,7 +32,7 @@ import com.dopsun.chatbot.cli.sml.PropertiesScript.ScriptCase;
  */
 @SuppressWarnings("javadoc")
 public class SmlCliParserTest {
-    private static CliParser cliParser;
+    private static Parser cliParser;
 
     @BeforeClass
     public static void prepareParser() throws URISyntaxException, IOException {
@@ -55,15 +55,15 @@ public class SmlCliParserTest {
         cliParser = builder.build();
     }
 
-    public static String parseResultToString(CliParseResult parseResult) {
-        CliCommand command = parseResult.command();
+    public static String parseResultToString(ParseResult parseResult) {
+        Command command = parseResult.command();
 
         StringBuilder sb = new StringBuilder();
         sb.append(command.name());
         sb.append("(");
 
         int i = 0;
-        for (CliArgument arg : command.arguments()) {
+        for (Argument arg : command.arguments()) {
             if (i > 0) {
                 sb.append(", ");
             }
@@ -78,14 +78,14 @@ public class SmlCliParserTest {
     }
 
     @Test
-    public void sanityTest() throws CliParserException, URISyntaxException, IOException {
+    public void sanityTest() throws ParserException, URISyntaxException, IOException {
         URL url = ClassLoader.getSystemResource("input/test-data.properties");
         Path testCasesPath = Paths.get(url.toURI());
 
         PropertiesScript script = new PropertiesScript(testCasesPath);
 
         for (ScriptCase scriptCase : script.scriptCases()) {
-            Optional<CliParseResult> optResult = cliParser.tryParse(scriptCase.input());
+            Optional<ParseResult> optResult = cliParser.tryParse(scriptCase.input());
 
             Optional<String> optScriptResult = scriptCase.result();
             if (!optScriptResult.isPresent()) {
@@ -94,7 +94,7 @@ public class SmlCliParserTest {
             }
 
             String scriptResult = optScriptResult.get();
-            CliParseResult cliResult = optResult.get();
+            ParseResult cliResult = optResult.get();
 
             Assert.assertEquals(scriptResult, parseResultToString(cliResult));
         }

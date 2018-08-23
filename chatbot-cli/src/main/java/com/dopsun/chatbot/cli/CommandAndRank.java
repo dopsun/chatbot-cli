@@ -19,14 +19,14 @@ public final class CommandAndRank {
         return Integer.compare(c1.rank(), c2.rank());
     };
 
-    private final CliCommand command;
+    private final Command command;
     private final int rank;
 
     /**
      * @param command
      * @param rank
      */
-    public CommandAndRank(CliCommand command, int rank) {
+    public CommandAndRank(Command command, int rank) {
         Objects.requireNonNull(command);
 
         this.command = command;
@@ -36,7 +36,7 @@ public final class CommandAndRank {
     /**
      * @return the command
      */
-    public CliCommand command() {
+    public Command command() {
         return command;
     }
 
