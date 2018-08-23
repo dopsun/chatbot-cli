@@ -14,8 +14,8 @@ import javax.annotation.Nullable;
 import com.dopsun.chatbot.cli.CliParser;
 import com.dopsun.chatbot.cli.CliParserBuilder;
 import com.dopsun.chatbot.cli.TraceListener;
-import com.dopsun.chatbot.cli.tds.CommandSet;
-import com.dopsun.chatbot.cli.tds.TrainingSet;
+import com.dopsun.chatbot.cli.input.CommandSet;
+import com.dopsun.chatbot.cli.input.TrainingSet;
 
 /**
  * @author Dop Sun

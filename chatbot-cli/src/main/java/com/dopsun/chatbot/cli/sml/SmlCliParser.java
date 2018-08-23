@@ -12,8 +12,8 @@ import java.util.Optional;
 import com.dopsun.chatbot.cli.CliParseResult;
 import com.dopsun.chatbot.cli.CliParser;
 import com.dopsun.chatbot.cli.CommandAndRank;
-import com.dopsun.chatbot.cli.tds.CommandItem;
-import com.dopsun.chatbot.cli.tds.CommandSet;
+import com.dopsun.chatbot.cli.input.CommandItem;
+import com.dopsun.chatbot.cli.input.CommandSet;
 
 /**
  * @author Dop Sun

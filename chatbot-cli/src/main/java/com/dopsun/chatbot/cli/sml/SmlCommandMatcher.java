@@ -10,7 +10,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import com.dopsun.chatbot.cli.CommandAndRank;
-import com.dopsun.chatbot.cli.tds.CommandItem;
+import com.dopsun.chatbot.cli.input.CommandItem;
 
 /**
  * @author Dop Sun

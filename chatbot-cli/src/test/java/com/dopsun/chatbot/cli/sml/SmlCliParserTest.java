@@ -20,11 +20,11 @@ import com.dopsun.chatbot.cli.CliCommand;
 import com.dopsun.chatbot.cli.CliParseResult;
 import com.dopsun.chatbot.cli.CliParser;
 import com.dopsun.chatbot.cli.CliParserException;
+import com.dopsun.chatbot.cli.input.CommandSet;
+import com.dopsun.chatbot.cli.input.CommandSetReader;
+import com.dopsun.chatbot.cli.input.TrainingSet;
+import com.dopsun.chatbot.cli.input.TrainingSetReader;
 import com.dopsun.chatbot.cli.sml.PropertiesScript.ScriptCase;
-import com.dopsun.chatbot.cli.tds.CommandSet;
-import com.dopsun.chatbot.cli.tds.CommandSetReader;
-import com.dopsun.chatbot.cli.tds.TrainingSet;
-import com.dopsun.chatbot.cli.tds.TrainingSetReader;
 
 /**
  * @author Dop Sun
