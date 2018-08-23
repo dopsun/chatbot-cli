@@ -30,7 +30,7 @@ public static void prepareParser() throws URISyntaxException {
     parser = parserBuilder.build();
  }
 ```
-In the above example, a [CliParser](chatbot-cli/src/main/java/com/dopsun/chatbot/cli/Parser.java)  is created based on command data set [Example](chatbot-cli/src/test/resources/input/command-data.properties).
+In the above example, a [Parser](chatbot-cli/src/main/java/com/dopsun/chatbot/cli/Parser.java)  is created based on command data set [Example](chatbot-cli/src/test/resources/input/command-data.properties).
 
 # Parse
 ```java
