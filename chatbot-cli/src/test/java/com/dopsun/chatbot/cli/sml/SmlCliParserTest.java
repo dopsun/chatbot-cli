@@ -37,8 +37,8 @@ public class SmlCliParserTest {
 
     @BeforeClass
     public static void prepareParser() throws URISyntaxException, IOException {
-        URL url = ClassLoader.getSystemResource("input/command-data.properties");
-        Path csPath = Paths.get(url.toURI());
+        URL csUrl = ClassLoader.getSystemResource("input/command-data.properties");
+        Path csPath = Paths.get(csUrl.toURI());
 
         CommandSetReader csReader = new CommandSetReader();
         CommandSet commandSet = csReader.read(csPath);

@@ -5,32 +5,46 @@ A simple ChatBot command line parser, trained with templates.
 
 * It's designed for Command Line Interface (CLI) for ChatBot, with predefined list of command syntax.
   * This is *NOT* a NLP (Natural Language Processing) parser.
-* It's *smart*, but predictable.
+* It's *smart* and predictable.
+* *To Be Added* [Reinforcement learning](https://en.wikipedia.org/wiki/Reinforcement_learning)
 
-# Train
+# Build
 ```java
 public static void prepareParser() throws URISyntaxException {
-    URL url = ClassLoader.getSystemResource("input/training-data.properties");
-    Path dsPath = Paths.get(url.toURI());
+    URL csUrl = ClassLoader.getSystemResource("input/command-data.properties");
+    Path csPath = Paths.get(csUrl.toURI());
 
-    TemplateDataSet dataSet = new TemplateDataSet(dsPath);
+    CommandSetReader csReader = new CommandSetReader();
+    CommandSet commandSet = csReader.read(csPath);
 
-    SmlCliParserBuilder builder = new SmlCliParserBuilder();
-    builder.add(dataSet);
-    cliParser = builder.build();
-}
+    URL tsUrl = ClassLoader.getSystemResource("input/training-data.yml");
+    Path tsPath = Paths.get(tsUrl.toURI());
+    TrainingSetReader tsReader = new TrainingSetReader();
+    TrainingSet trainingSet = tsReader.read(tsPath);
+
+    ParserBuilder parserBuilder = Parser.newBuilder();
+    parserBuilder.addCommandSet(commandSet);
+    parserBuilder.addTrainingSet(trainingSet);
+
+    parserBuilder.setLogger(System.out::println);
+    parser = parserBuilder.build();
+ }
 ```
-In the above example, a [CliParser](chatbot-cli/src/main/java/com/dopsun/chatbot/cli/CliParser.java)  is created based on taining data set [Example](chatbot-cli/src/test/resources/input/training-data.properties).
+In the above example, a [CliParser](chatbot-cli/src/main/java/com/dopsun/chatbot/cli/Parser.java)  is created based on command data set [Example](chatbot-cli/src/test/resources/input/command-data.properties).
 
 # Parse
 ```java
-Optional<CliParseResult> optResult = cliParser.tryParse(command);
+Optional<ParseResult> optResult = parser.tryParse(command);
 ```
-If `optResult`, is present, parse succeed. And returned [CliParseResult](chatbot-cli/src/main/java/com/dopsun/chatbot/cli/CliParseResult.java) includes command.
+If `optResult`, is present, parse succeed. And returned [ParseResult](chatbot-cli/src/main/java/com/dopsun/chatbot/cli/ParseResult.java) includes command.
+
+# Continuous improving
+*To Be Added* Successfully parsing result, along with feedback, will be stored as training set, and improve parser working better next time.
 
 # Work in process
 
 Here are items pending to implement:
 * Tolerance for spelling errors
-* More training syntax support
+* More command template syntax support
+* Reinforcement learning
 * performance improvements
