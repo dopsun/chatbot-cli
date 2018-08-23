@@ -41,7 +41,7 @@ public class TrainingSetReader {
 
     private TrainingSet read(BufferedReader reader) throws IOException {
         String firstline = reader.readLine();
-        if (!"data-set:".equals(firstline)) {
+        if (!"training-set:".equals(firstline)) {
             throw new IllegalStateException("Invalid header.");
         }
 

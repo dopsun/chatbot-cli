@@ -29,7 +29,7 @@ public class TrainingSetWriter implements AutoCloseable {
     public static TrainingSetWriter createNew(Path path) throws IOException {
         BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8,
                 StandardOpenOption.CREATE_NEW);
-        writer.write("data-set:\n");
+        writer.write("training-set:\n");
         return new TrainingSetWriter(writer);
     }
 
@@ -59,8 +59,7 @@ public class TrainingSetWriter implements AutoCloseable {
      * @param feedback
      * @throws IOException
      */
-    public void write(String input, Command command, TrainingFeedback feedback)
-            throws IOException {
+    public void write(String input, Command command, TrainingFeedback feedback) throws IOException {
         writer.write("- input: ");
         writer.write(input);
 

@@ -1,4 +1,4 @@
-data-set:
+training-set:
 - input: get contact xyz
   feedback: NEUTRAL
   command: get_contact
