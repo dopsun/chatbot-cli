@@ -10,7 +10,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import com.dopsun.chatbot.cli.CommandAndRank;
-import com.dopsun.chatbot.cli.tds.DataItem;
+import com.dopsun.chatbot.cli.tds.CommandItem;
 
 /**
  * @author Dop Sun
@@ -22,7 +22,7 @@ final class SmlCommandMatcher {
     /**
      * @param dataItem
      */
-    public SmlCommandMatcher(DataItem dataItem) {
+    public SmlCommandMatcher(CommandItem dataItem) {
         Objects.requireNonNull(dataItem);
 
         List<SmlSentenceMatcher> tempList = new ArrayList<>();

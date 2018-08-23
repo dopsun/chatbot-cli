@@ -12,8 +12,8 @@ import java.util.Optional;
 import com.dopsun.chatbot.cli.CliParseResult;
 import com.dopsun.chatbot.cli.CliParser;
 import com.dopsun.chatbot.cli.CommandAndRank;
-import com.dopsun.chatbot.cli.tds.DataItem;
-import com.dopsun.chatbot.cli.tds.DataSet;
+import com.dopsun.chatbot.cli.tds.CommandItem;
+import com.dopsun.chatbot.cli.tds.CommandSet;
 
 /**
  * @author Dop Sun
@@ -24,17 +24,17 @@ final class SmlCliParser implements CliParser {
     private final List<SmlCommandMatcher> matcherList = new ArrayList<>();
 
     /**
-     * @param dataSets
+     * @param commandSets
      */
-    SmlCliParser(List<DataSet> dataSets, ParserTrace trace) {
-        Objects.requireNonNull(dataSets);
+    SmlCliParser(List<CommandSet> commandSets, ParserTrace trace) {
+        Objects.requireNonNull(commandSets);
         Objects.requireNonNull(trace);
 
         this.trace = trace;
 
-        for (DataSet ds : dataSets) {
-            for (DataItem di : ds.items()) {
-                SmlCommandMatcher matcher = new SmlCommandMatcher(di);
+        for (CommandSet commandSet : commandSets) {
+            for (CommandItem commandItem : commandSet.items()) {
+                SmlCommandMatcher matcher = new SmlCommandMatcher(commandItem);
                 matcherList.add(matcher);
             }
         }

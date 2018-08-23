@@ -18,17 +18,25 @@ import java.util.stream.Stream;
  * @author Dop Sun
  * @since 1.0.0
  */
-public class TemplateDataSet implements DataSet {
-    private final List<DataItem> dataItems = new ArrayList<>();
+public final class CommandSetReader {
+    /**
+     * 
+     */
+    public CommandSetReader() {
+
+    }
 
     /**
      * @param path
+     * @return
      */
-    public TemplateDataSet(Path path) {
+    public CommandSet read(Path path) {
         Objects.requireNonNull(path);
 
         List<String> commandList = new ArrayList<>(); // keep sequence.
         Map<String, List<String>> map = new HashMap<>();
+
+        List<CommandItem> commandItems = new ArrayList<>();
 
         try (Stream<String> stream = Files.lines(path)) {
             stream.forEach(line -> {
@@ -58,13 +66,54 @@ public class TemplateDataSet implements DataSet {
 
         for (String commandName : commandList) {
             List<String> templates = map.get(commandName);
-            DataItem dataItem = new TemplateDataItem(commandName, templates);
-            dataItems.add(dataItem);
+            CommandItem dataItem = new CommandItemImpl(commandName, templates);
+            commandItems.add(dataItem);
+        }
+
+        CommandSetImpl result = new CommandSetImpl(commandItems);
+        return result;
+    }
+
+    static class CommandSetImpl implements CommandSet {
+        private final List<CommandItem> items;
+
+        public CommandSetImpl(List<CommandItem> items) {
+            Objects.requireNonNull(items);
+
+            this.items = items;
+        }
+
+        @Override
+        public List<CommandItem> items() {
+            return items;
         }
     }
 
-    @Override
-    public List<DataItem> items() {
-        return dataItems;
+    static class CommandItemImpl implements CommandItem {
+        private final String commandName;
+        private final List<String> templates;
+
+        /**
+         * @param commandName
+         * @param templates
+         */
+        public CommandItemImpl(String commandName, final List<String> templates) {
+            Objects.requireNonNull(commandName);
+            Objects.requireNonNull(templates);
+
+            this.commandName = commandName;
+            this.templates = templates;
+        }
+
+        @Override
+        public String commandName() {
+            return commandName;
+        }
+
+        @Override
+        public List<String> templates() {
+            return templates;
+        }
+
     }
 }

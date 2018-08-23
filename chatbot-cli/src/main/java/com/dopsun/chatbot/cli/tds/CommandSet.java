@@ -10,15 +10,9 @@ import java.util.List;
  * @author Dop Sun
  * @since 1.0.0
  */
-public interface DataItem {
+public interface CommandSet {
     /**
      * @return
      */
-    String commandName();
-
-    /**
-     * @return the input
-     */
-    List<String> templates();
-
+    List<CommandItem> items();
 }

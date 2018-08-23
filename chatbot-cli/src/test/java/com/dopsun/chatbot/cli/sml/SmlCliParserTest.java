@@ -21,7 +21,8 @@ import com.dopsun.chatbot.cli.CliParseResult;
 import com.dopsun.chatbot.cli.CliParser;
 import com.dopsun.chatbot.cli.CliParserException;
 import com.dopsun.chatbot.cli.sml.PropertiesScript.ScriptCase;
-import com.dopsun.chatbot.cli.tds.TemplateDataSet;
+import com.dopsun.chatbot.cli.tds.CommandSet;
+import com.dopsun.chatbot.cli.tds.CommandSetReader;
 import com.dopsun.chatbot.cli.tds.TrainingSet;
 import com.dopsun.chatbot.cli.tds.TrainingSetReader;
 
@@ -35,18 +36,19 @@ public class SmlCliParserTest {
 
     @BeforeClass
     public static void prepareParser() throws URISyntaxException, IOException {
-        URL url = ClassLoader.getSystemResource("input/template-data.properties");
-        Path dsPath = Paths.get(url.toURI());
+        URL url = ClassLoader.getSystemResource("input/command-data.properties");
+        Path csPath = Paths.get(url.toURI());
 
-        TemplateDataSet dataSet = new TemplateDataSet(dsPath);
+        CommandSetReader csReader = new CommandSetReader();
+        CommandSet commandSet = csReader.read(csPath);
 
         URL tsUrl = ClassLoader.getSystemResource("input/training-data.yml");
         Path tsPath = Paths.get(tsUrl.toURI());
-        TrainingSetReader reader = new TrainingSetReader();
-        TrainingSet trainingSet = reader.read(tsPath);
+        TrainingSetReader tsReader = new TrainingSetReader();
+        TrainingSet trainingSet = tsReader.read(tsPath);
 
         SmlCliParserBuilder builder = new SmlCliParserBuilder();
-        builder.addDataSet(dataSet);
+        builder.addCommandSet(commandSet);
         builder.addTrainingSet(trainingSet);
 
         builder.setLogger(System.out::println);

@@ -14,7 +14,7 @@ import javax.annotation.Nullable;
 import com.dopsun.chatbot.cli.CliParser;
 import com.dopsun.chatbot.cli.CliParserBuilder;
 import com.dopsun.chatbot.cli.TraceListener;
-import com.dopsun.chatbot.cli.tds.DataSet;
+import com.dopsun.chatbot.cli.tds.CommandSet;
 import com.dopsun.chatbot.cli.tds.TrainingSet;
 
 /**
@@ -22,7 +22,7 @@ import com.dopsun.chatbot.cli.tds.TrainingSet;
  * @since 1.0.0
  */
 public final class SmlCliParserBuilder implements CliParserBuilder {
-    private final List<DataSet> dataSets = new ArrayList<>();
+    private final List<CommandSet> commandSet = new ArrayList<>();
     private final List<TrainingSet> trainingSets = new ArrayList<>();
 
     @Nullable
@@ -31,17 +31,17 @@ public final class SmlCliParserBuilder implements CliParserBuilder {
     @Override
     public CliParser build() {
         ParserTrace parserTrace = new ParserTrace(Optional.ofNullable(traceListener));
-        SmlCliParser parser = new SmlCliParser(dataSets, parserTrace);
+        SmlCliParser parser = new SmlCliParser(commandSet, parserTrace);
         return parser;
     }
 
     /**
      * @param dataSet
      */
-    public void addDataSet(DataSet dataSet) {
+    public void addCommandSet(CommandSet dataSet) {
         Objects.requireNonNull(dataSet);
 
-        this.dataSets.add(dataSet);
+        this.commandSet.add(dataSet);
     }
 
     /**
