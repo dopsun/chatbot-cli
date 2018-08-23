@@ -38,7 +38,7 @@ public final class SmlCliParserBuilder implements CliParserBuilder {
     /**
      * @param dataSet
      */
-    public void add(DataSet dataSet) {
+    public void addDataSet(DataSet dataSet) {
         Objects.requireNonNull(dataSet);
 
         this.dataSets.add(dataSet);

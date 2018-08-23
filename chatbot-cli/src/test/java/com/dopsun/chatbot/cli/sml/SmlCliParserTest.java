@@ -46,7 +46,7 @@ public class SmlCliParserTest {
         TrainingSet trainingSet = reader.read(tsPath);
 
         SmlCliParserBuilder builder = new SmlCliParserBuilder();
-        builder.add(dataSet);
+        builder.addDataSet(dataSet);
         builder.addTrainingSet(trainingSet);
 
         builder.setLogger(System.out::println);
