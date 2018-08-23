@@ -25,7 +25,7 @@ package com.dopsun.chatbot.cli;
  * @since 1.0.0
  */
 @FunctionalInterface
-public interface TraceListener {
+public interface ParserTracer {
     /**
      * @param message
      */

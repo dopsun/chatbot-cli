@@ -26,7 +26,7 @@ public static void prepareParser() throws URISyntaxException {
     parserBuilder.addCommandSet(commandSet);
     parserBuilder.addTrainingSet(trainingSet);
 
-    parserBuilder.setLogger(System.out::println);
+    parserBuilder.setTracer(System.out::println);
     parser = parserBuilder.build();
  }
 ```

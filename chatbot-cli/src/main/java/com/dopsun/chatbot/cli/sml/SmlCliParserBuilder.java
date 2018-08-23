@@ -11,7 +11,7 @@ import java.util.Optional;
 
 import com.dopsun.chatbot.cli.Parser;
 import com.dopsun.chatbot.cli.ParserBuilder;
-import com.dopsun.chatbot.cli.TraceListener;
+import com.dopsun.chatbot.cli.ParserTracer;
 import com.dopsun.chatbot.cli.input.CommandSet;
 import com.dopsun.chatbot.cli.input.TrainingSet;
 
@@ -23,7 +23,7 @@ public final class SmlCliParserBuilder implements ParserBuilder {
     private final List<CommandSet> commandSet = new ArrayList<>();
     private final List<TrainingSet> trainingSets = new ArrayList<>();
 
-    private Optional<TraceListener> traceListener = Optional.empty();
+    private Optional<ParserTracer> parserTracer = Optional.empty();
 
     @Override
     public Parser build() {
@@ -45,10 +45,10 @@ public final class SmlCliParserBuilder implements ParserBuilder {
     }
 
     /**
-     * @return the traceListener
+     * @return the parserTracer
      */
-    public Optional<TraceListener> traceListener() {
-        return traceListener;
+    public Optional<ParserTracer> parserTracer() {
+        return parserTracer;
     }
 
     /**
@@ -73,7 +73,7 @@ public final class SmlCliParserBuilder implements ParserBuilder {
      * @param listener
      *            the logger to set
      */
-    public void setLogger(TraceListener listener) {
-        this.traceListener = Optional.of(listener);
+    public void setTracer(ParserTracer listener) {
+        this.parserTracer = Optional.of(listener);
     }
 }

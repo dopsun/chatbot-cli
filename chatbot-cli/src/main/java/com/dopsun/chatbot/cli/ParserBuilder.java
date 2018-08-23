@@ -28,8 +28,8 @@ public interface ParserBuilder {
     void addTrainingSet(TrainingSet trainingSet);
 
     /**
-     * @param logger
-     *            the logger to set
+     * @param tracer
+     *            the tracer to set
      */
-    void setLogger(TraceListener logger);
+    void setTracer(ParserTracer tracer);
 }

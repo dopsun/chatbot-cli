@@ -52,7 +52,7 @@ public class SmlCliParserTest {
         parserBuilder.addCommandSet(commandSet);
         parserBuilder.addTrainingSet(trainingSet);
 
-        parserBuilder.setLogger(System.out::println);
+        parserBuilder.setTracer(System.out::println);
         parser = parserBuilder.build();
     }
 

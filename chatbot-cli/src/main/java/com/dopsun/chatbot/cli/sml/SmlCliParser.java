@@ -20,7 +20,7 @@ import com.dopsun.chatbot.cli.input.CommandSet;
  * @since 1.0.0
  */
 final class SmlCliParser implements Parser {
-    private final ParserTrace trace;
+    private final ParserTracerWrapper tracer;
     private final List<SmlCommandMatcher> matcherList = new ArrayList<>();
 
     /**
@@ -33,7 +33,7 @@ final class SmlCliParser implements Parser {
             throw new IllegalStateException("Empty command set.");
         }
 
-        this.trace = new ParserTrace(builder.traceListener());
+        this.tracer = new ParserTracerWrapper(builder.parserTracer());
 
         for (CommandSet commandSet : builder.commandSet()) {
             for (CommandItem commandItem : commandSet.items()) {
@@ -46,8 +46,8 @@ final class SmlCliParser implements Parser {
     /**
      * @return
      */
-    ParserTrace trace() {
-        return this.trace;
+    ParserTracerWrapper tracer() {
+        return this.tracer;
     }
 
     /**
@@ -57,7 +57,7 @@ final class SmlCliParser implements Parser {
     public Optional<ParseResult> tryParse(String commandText) {
         Objects.requireNonNull(commandText);
 
-        trace.enterMethod(this, "tryParse", commandText);
+        tracer.enterMethod(this, "tryParse", commandText);
 
         ParseResultBuilder builder = ParseResultBuilder.create();
 

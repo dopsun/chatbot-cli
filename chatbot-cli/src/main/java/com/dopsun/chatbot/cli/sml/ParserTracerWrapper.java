@@ -7,16 +7,16 @@ package com.dopsun.chatbot.cli.sml;
 import java.util.Objects;
 import java.util.Optional;
 
-import com.dopsun.chatbot.cli.TraceListener;
+import com.dopsun.chatbot.cli.ParserTracer;
 
 /**
  * @author Dop Sun
  * @since 1.0.0
  */
-final class ParserTrace {
-    private final Optional<TraceListener> listener;
+final class ParserTracerWrapper {
+    private final Optional<ParserTracer> listener;
 
-    ParserTrace(Optional<TraceListener> listener) {
+    ParserTracerWrapper(Optional<ParserTracer> listener) {
         Objects.requireNonNull(listener);
 
         this.listener = listener;
