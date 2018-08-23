@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import com.dopsun.chatbot.cli.CommandAndRank;
 import com.dopsun.chatbot.cli.ParseResult;
 import com.dopsun.chatbot.cli.Parser;
-import com.dopsun.chatbot.cli.CommandAndRank;
 import com.dopsun.chatbot.cli.input.CommandItem;
 import com.dopsun.chatbot.cli.input.CommandSet;
 
@@ -25,14 +25,17 @@ final class SmlCliParser implements Parser {
 
     /**
      * @param commandSets
+     * @param traceListener
      */
-    SmlCliParser(List<CommandSet> commandSets, ParserTrace trace) {
-        Objects.requireNonNull(commandSets);
-        Objects.requireNonNull(trace);
+    SmlCliParser(SmlCliParserBuilder builder) {
+        Objects.requireNonNull(builder);
+        if (builder.commandSet().isEmpty()) {
+            throw new IllegalStateException("Empty command set.");
+        }
 
-        this.trace = trace;
+        this.trace = new ParserTrace(builder.traceListener());
 
-        for (CommandSet commandSet : commandSets) {
+        for (CommandSet commandSet : builder.commandSet()) {
             for (CommandItem commandItem : commandSet.items()) {
                 SmlCommandMatcher matcher = new SmlCommandMatcher(commandItem);
                 matcherList.add(matcher);

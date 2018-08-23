@@ -6,11 +6,20 @@ package com.dopsun.chatbot.cli;
 
 import java.util.Optional;
 
+import com.dopsun.chatbot.cli.sml.SmlCliParserBuilder;
+
 /**
  * @author Dop Sun
  * @since 1.0.0
  */
 public interface Parser {
+    /**
+     * @return a new {@link ParserBuilder}.
+     */
+    static ParserBuilder newBuilder() {
+        return new SmlCliParserBuilder();
+    }
+
     /**
      * Tries to parse the <code>commandText</code>. Returns {@link Optional#empty()} if not
      * recognized.

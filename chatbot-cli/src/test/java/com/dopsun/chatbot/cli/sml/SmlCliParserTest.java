@@ -19,6 +19,7 @@ import com.dopsun.chatbot.cli.Argument;
 import com.dopsun.chatbot.cli.Command;
 import com.dopsun.chatbot.cli.ParseResult;
 import com.dopsun.chatbot.cli.Parser;
+import com.dopsun.chatbot.cli.ParserBuilder;
 import com.dopsun.chatbot.cli.ParserException;
 import com.dopsun.chatbot.cli.input.CommandSet;
 import com.dopsun.chatbot.cli.input.CommandSetReader;
@@ -32,7 +33,7 @@ import com.dopsun.chatbot.cli.sml.PropertiesScript.ScriptCase;
  */
 @SuppressWarnings("javadoc")
 public class SmlCliParserTest {
-    private static Parser cliParser;
+    private static Parser parser;
 
     @BeforeClass
     public static void prepareParser() throws URISyntaxException, IOException {
@@ -47,12 +48,12 @@ public class SmlCliParserTest {
         TrainingSetReader tsReader = new TrainingSetReader();
         TrainingSet trainingSet = tsReader.read(tsPath);
 
-        SmlCliParserBuilder builder = new SmlCliParserBuilder();
-        builder.addCommandSet(commandSet);
-        builder.addTrainingSet(trainingSet);
+        ParserBuilder parserBuilder = Parser.newBuilder();
+        parserBuilder.addCommandSet(commandSet);
+        parserBuilder.addTrainingSet(trainingSet);
 
-        builder.setLogger(System.out::println);
-        cliParser = builder.build();
+        parserBuilder.setLogger(System.out::println);
+        parser = parserBuilder.build();
     }
 
     public static String parseResultToString(ParseResult parseResult) {
@@ -85,7 +86,7 @@ public class SmlCliParserTest {
         PropertiesScript script = new PropertiesScript(testCasesPath);
 
         for (ScriptCase scriptCase : script.scriptCases()) {
-            Optional<ParseResult> optResult = cliParser.tryParse(scriptCase.input());
+            Optional<ParseResult> optResult = parser.tryParse(scriptCase.input());
 
             Optional<String> optScriptResult = scriptCase.result();
             if (!optScriptResult.isPresent()) {

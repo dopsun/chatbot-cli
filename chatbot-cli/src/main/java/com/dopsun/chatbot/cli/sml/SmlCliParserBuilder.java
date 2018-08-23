@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import javax.annotation.Nullable;
-
 import com.dopsun.chatbot.cli.Parser;
 import com.dopsun.chatbot.cli.ParserBuilder;
 import com.dopsun.chatbot.cli.TraceListener;
@@ -25,14 +23,32 @@ public final class SmlCliParserBuilder implements ParserBuilder {
     private final List<CommandSet> commandSet = new ArrayList<>();
     private final List<TrainingSet> trainingSets = new ArrayList<>();
 
-    @Nullable
-    private TraceListener traceListener;
+    private Optional<TraceListener> traceListener = Optional.empty();
 
     @Override
     public Parser build() {
-        ParserTrace parserTrace = new ParserTrace(Optional.ofNullable(traceListener));
-        SmlCliParser parser = new SmlCliParser(commandSet, parserTrace);
-        return parser;
+        return new SmlCliParser(this);
+    }
+
+    /**
+     * @return the commandSet
+     */
+    public List<CommandSet> commandSet() {
+        return commandSet;
+    }
+
+    /**
+     * @return the trainingSets
+     */
+    public List<TrainingSet> trainingSets() {
+        return trainingSets;
+    }
+
+    /**
+     * @return the traceListener
+     */
+    public Optional<TraceListener> traceListener() {
+        return traceListener;
     }
 
     /**
@@ -54,17 +70,10 @@ public final class SmlCliParserBuilder implements ParserBuilder {
     }
 
     /**
-     * @return the logger
-     */
-    public TraceListener getLogger() {
-        return traceListener;
-    }
-
-    /**
-     * @param logger
+     * @param listener
      *            the logger to set
      */
-    public void setLogger(TraceListener logger) {
-        this.traceListener = logger;
+    public void setLogger(TraceListener listener) {
+        this.traceListener = Optional.of(listener);
     }
 }
