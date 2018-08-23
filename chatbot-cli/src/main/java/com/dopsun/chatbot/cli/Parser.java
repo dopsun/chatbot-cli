@@ -9,11 +9,15 @@ import java.util.Optional;
 import com.dopsun.chatbot.cli.sml.SmlCliParserBuilder;
 
 /**
+ * A parser parses text into {@link Command}.
+ * 
  * @author Dop Sun
  * @since 1.0.0
  */
 public interface Parser {
     /**
+     * Creates a new {@link ParserBuilder}.
+     * 
      * @return a new {@link ParserBuilder}.
      */
     static ParserBuilder newBuilder() {
@@ -22,7 +26,7 @@ public interface Parser {
 
     /**
      * Tries to parse the <code>commandText</code>. Returns {@link Optional#empty()} if not
-     * recognized.
+     * recognized. At least one {@link Command} matched if result {@link Optional#isPresent()}.
      * 
      * @param commandText
      *            command text to parse.

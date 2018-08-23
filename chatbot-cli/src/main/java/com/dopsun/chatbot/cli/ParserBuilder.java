@@ -8,6 +8,8 @@ import com.dopsun.chatbot.cli.input.CommandSet;
 import com.dopsun.chatbot.cli.input.TrainingSet;
 
 /**
+ * Builder for {@link Parser}.
+ * 
  * @author Dop Sun
  * @since 1.0.0
  */

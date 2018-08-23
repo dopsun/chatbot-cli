@@ -10,6 +10,8 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -64,6 +66,8 @@ public class SmlCliParserTest {
         sb.append("(");
 
         int i = 0;
+        
+        command.arguments().stream().collect(Collectors.toMap(Argument::name, Function.identity()));
         for (Argument arg : command.arguments()) {
             if (i > 0) {
                 sb.append(", ");

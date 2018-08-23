@@ -8,6 +8,8 @@ import java.util.Comparator;
 import java.util.Objects;
 
 /**
+ * Command and its ranking. Command is in higher rank if {@link #rank()} is smaller.
+ * 
  * @author Dop Sun
  * @since 1.0.0
  */
