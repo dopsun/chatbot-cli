@@ -20,11 +20,11 @@ public final class PrefixWordMatcher implements WordMatcher {
     /**
      * @return
      */
-    public static final WordMatcherFactory<PrefixWordMatcher> newFactory() {
+    public static final WordMatcherFactory newFactory() {
         return new Factory();
     }
 
-    static class Factory implements WordMatcherFactory<PrefixWordMatcher> {
+    static class Factory implements WordMatcherFactory {
         @Override
         public PrefixWordMatcher compile(String template) {
             return new PrefixWordMatcher(template);

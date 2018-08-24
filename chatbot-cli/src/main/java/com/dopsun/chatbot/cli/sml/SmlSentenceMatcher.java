@@ -62,7 +62,7 @@ final class SmlSentenceMatcher {
     private static final String START_TAG = "${";
     private static final String STOP_TAG = "}";
 
-    private final WordMatcherFactory<?> wordMatcherFactory;
+    private final WordMatcherFactory wordMatcherFactory;
 
     private final String commandName;
     private final String template;
@@ -73,7 +73,7 @@ final class SmlSentenceMatcher {
      * @param commandName
      * @param template
      */
-    public SmlSentenceMatcher(WordMatcherFactory<?> wordMatcherFactory, String commandName,
+    public SmlSentenceMatcher(WordMatcherFactory wordMatcherFactory, String commandName,
             String template) {
         Objects.requireNonNull(wordMatcherFactory);
         Objects.requireNonNull(commandName);

@@ -13,7 +13,7 @@ import java.util.OptionalInt;
  * @author Dop Sun
  * @since 1.0.0
  */
-public final class CompositeWordMatcherFactory implements WordMatcherFactory<WordMatcher> {
+public final class CompositeWordMatcherFactory implements WordMatcherFactory {
     /**
      * @return
      */
@@ -26,12 +26,12 @@ public final class CompositeWordMatcherFactory implements WordMatcherFactory<Wor
         return factory;
     }
 
-    private final List<WordMatcherFactory<?>> factoryList = new ArrayList<>();
+    private final List<WordMatcherFactory> factoryList = new ArrayList<>();
 
     /**
      * @param factory
      */
-    public void add(WordMatcherFactory<?> factory) {
+    public void add(WordMatcherFactory factory) {
         Objects.requireNonNull(factory);
 
         this.factoryList.add(factory);
@@ -42,7 +42,7 @@ public final class CompositeWordMatcherFactory implements WordMatcherFactory<Wor
         Objects.requireNonNull(template);
 
         List<WordMatcher> wordMatcherList = new ArrayList<>();
-        for (WordMatcherFactory<?> factory : factoryList) {
+        for (WordMatcherFactory factory : factoryList) {
             wordMatcherList.add(factory.compile(template));
         }
 

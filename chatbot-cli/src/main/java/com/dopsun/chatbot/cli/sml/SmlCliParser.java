@@ -37,7 +37,7 @@ final class SmlCliParser implements Parser {
 
         this.tracer = new ParserTracerWrapper(builder.parserTracer());
 
-        WordMatcherFactory<?> wordMatcherFactory = builder.wordMatcherFactory()
+        WordMatcherFactory wordMatcherFactory = builder.wordMatcherFactory()
                 .orElse(CompositeWordMatcherFactory.createDefault());
 
         for (CommandSet commandSet : builder.commandSet()) {

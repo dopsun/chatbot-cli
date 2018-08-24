@@ -6,14 +6,13 @@ package com.dopsun.chatbot.cli.ext;
 
 /**
  * @author Dop Sun
- * @param <T>
  * @since 1.0.0
  */
-public interface WordMatcherFactory<T extends WordMatcher> {
+public interface WordMatcherFactory {
 
     /**
      * @param template
      * @return
      */
-    T compile(String template);
+    WordMatcher compile(String template);
 }

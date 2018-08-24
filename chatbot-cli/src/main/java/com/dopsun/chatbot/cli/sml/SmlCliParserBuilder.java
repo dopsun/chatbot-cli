@@ -24,7 +24,7 @@ public final class SmlCliParserBuilder implements ParserBuilder {
     private final List<CommandSet> commandSet = new ArrayList<>();
     private final List<TrainingSet> trainingSets = new ArrayList<>();
 
-    private Optional<WordMatcherFactory<?>> wordMatcherFactory = Optional.empty();
+    private Optional<WordMatcherFactory> wordMatcherFactory = Optional.empty();
 
     private Optional<ParserTracer> parserTracer = Optional.empty();
 
@@ -58,7 +58,7 @@ public final class SmlCliParserBuilder implements ParserBuilder {
      * @param wordMatcherFactory
      *            the wordMatcherFactory to set
      */
-    public void setWordMatcherFactory(WordMatcherFactory<?> wordMatcherFactory) {
+    public void setWordMatcherFactory(WordMatcherFactory wordMatcherFactory) {
         Objects.requireNonNull(wordMatcherFactory);
 
         this.wordMatcherFactory = Optional.of(wordMatcherFactory);
@@ -67,7 +67,7 @@ public final class SmlCliParserBuilder implements ParserBuilder {
     /**
      * @return the wordMatcherFactory
      */
-    public Optional<WordMatcherFactory<?>> wordMatcherFactory() {
+    public Optional<WordMatcherFactory> wordMatcherFactory() {
         return wordMatcherFactory;
     }
 

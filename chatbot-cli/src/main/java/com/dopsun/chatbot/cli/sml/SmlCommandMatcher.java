@@ -24,7 +24,7 @@ final class SmlCommandMatcher {
      * @param dataItem
      * @param wordMatcherFactory
      */
-    public SmlCommandMatcher(CommandItem dataItem, WordMatcherFactory<?> wordMatcherFactory) {
+    public SmlCommandMatcher(CommandItem dataItem, WordMatcherFactory wordMatcherFactory) {
         Objects.requireNonNull(dataItem);
 
         List<SmlSentenceMatcher> tempList = new ArrayList<>();

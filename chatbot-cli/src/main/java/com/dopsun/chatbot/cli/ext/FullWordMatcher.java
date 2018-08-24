@@ -21,11 +21,11 @@ public final class FullWordMatcher implements WordMatcher {
     /**
      * @return
      */
-    public static final WordMatcherFactory<FullWordMatcher> newFactory() {
+    public static final WordMatcherFactory newFactory() {
         return new Factory();
     }
 
-    static class Factory implements WordMatcherFactory<FullWordMatcher> {
+    static class Factory implements WordMatcherFactory {
         @Override
         public FullWordMatcher compile(String template) {
             return new FullWordMatcher(template);
