@@ -8,9 +8,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.OptionalInt;
 
 import com.dopsun.chatbot.cli.Argument;
 import com.dopsun.chatbot.cli.Command;
+import com.dopsun.chatbot.cli.ext.AggregatedWordMatcher;
+import com.dopsun.chatbot.cli.ext.FullWordMatcher;
+import com.dopsun.chatbot.cli.ext.PrefixWordMatcher;
+import com.dopsun.chatbot.cli.ext.WordMatcher;
+import com.dopsun.chatbot.cli.ext.WordMatcherFactory;
 
 /**
  * @author Dop Sun
@@ -59,6 +65,8 @@ final class SmlSentenceMatcher {
     private static final String START_TAG = "${";
     private static final String STOP_TAG = "}";
 
+    private final List<WordMatcherFactory<?>> wordMatcherFactoiries;
+
     private final String commandName;
     private final String template;
     private final List<Part> partList = new ArrayList<>();
@@ -73,6 +81,11 @@ final class SmlSentenceMatcher {
 
         this.commandName = commandName;
         this.template = template;
+
+        // FIXME: this should be moved to other place and ensure it's extensiable.
+        this.wordMatcherFactoiries = new ArrayList<>();
+        this.wordMatcherFactoiries.add(FullWordMatcher.newFactory());
+        this.wordMatcherFactoiries.add(PrefixWordMatcher.newFactory());
 
         int index = 0;
         while (index < template.length()) {
@@ -190,8 +203,8 @@ final class SmlSentenceMatcher {
         }
     }
 
-    static class ConstantPart extends Part {
-        final List<SmlWordMatcher> wordMatchList = new ArrayList<>();
+    final class ConstantPart extends Part {
+        final List<WordMatcher> wordMatchList = new ArrayList<>();
 
         public ConstantPart(String name) {
             super(name);
@@ -200,7 +213,13 @@ final class SmlSentenceMatcher {
             for (String word : wordArray) {
                 String temp = word.trim().toLowerCase();
                 if (temp.length() > 0) {
-                    wordMatchList.add(new SmlWordMatcher(temp));
+                    AggregatedWordMatcher.Builder builder = AggregatedWordMatcher.newBuilder();
+
+                    for (WordMatcherFactory<?> factory : wordMatcherFactoiries) {
+                        builder.add(factory.compile(temp));
+                    }
+
+                    wordMatchList.add(builder.build());
                 }
             }
         }
@@ -214,14 +233,17 @@ final class SmlSentenceMatcher {
             WordAndLocation first = null;
             WordAndLocation last = null;
 
-            for (SmlWordMatcher wordMatcher : wordMatchList) {
+            for (WordMatcher wordMatcher : wordMatchList) {
                 while (wordList.size() > 0) {
-                    if (wordMatcher.match(wordList.get(0).word())) {
+                    OptionalInt optDiscount = wordMatcher.match(wordList.get(0).word());
+                    if (optDiscount.isPresent()) {
                         if (first == null) {
                             first = wordList.get(0);
                         } else {
                             last = wordList.get(0);
                         }
+
+                        rankCalc.discount(optDiscount.getAsInt());
 
                         wordList.remove(0);
                         break;

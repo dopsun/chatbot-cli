@@ -33,4 +33,12 @@ final class RankCalculator {
 
         rank += count * SKIP_CONST_WORD_POINTS_PER_WORD;
     }
+
+    public void discount(int points) {
+        if (points < 0) {
+            throw new IllegalArgumentException("illegal points: " + points);
+        }
+
+        rank += points;
+    }
 }

@@ -66,7 +66,7 @@ public class SmlCliParserTest {
         sb.append("(");
 
         int i = 0;
-        
+
         command.arguments().stream().collect(Collectors.toMap(Argument::name, Function.identity()));
         for (Argument arg : command.arguments()) {
             if (i > 0) {
@@ -90,6 +90,8 @@ public class SmlCliParserTest {
         PropertiesScript script = new PropertiesScript(testCasesPath);
 
         for (ScriptCase scriptCase : script.scriptCases()) {
+            System.out.println("User case: " + scriptCase.input());
+
             Optional<ParseResult> optResult = parser.tryParse(scriptCase.input());
 
             Optional<String> optScriptResult = scriptCase.result();
