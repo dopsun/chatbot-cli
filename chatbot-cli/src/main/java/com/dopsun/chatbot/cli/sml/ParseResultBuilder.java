@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 import com.dopsun.chatbot.cli.Command;
 import com.dopsun.chatbot.cli.ParseResult;
+import com.dopsun.chatbot.cli.Rank;
 
 /**
  * @author Dop Sun
@@ -53,7 +54,7 @@ final class ParseResultBuilder {
 
             /** @formatter:off */
             this.allCommands = builder.commands.stream()
-                    .sorted(Command.rankComparator)
+                    .sorted(Rank.comparator.reversed())
                     .collect(Collectors.toList());
             /** @formatter:on */
         }

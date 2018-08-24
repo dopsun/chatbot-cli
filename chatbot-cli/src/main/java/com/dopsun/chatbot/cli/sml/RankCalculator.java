@@ -4,6 +4,8 @@
 
 package com.dopsun.chatbot.cli.sml;
 
+import com.dopsun.chatbot.cli.Rank;
+
 /**
  * @author Dop Sun
  * @since 1.0.0
@@ -20,8 +22,8 @@ final class RankCalculator {
     /**
      * @return
      */
-    public int rank() {
-        return rank;
+    public Rank rank() {
+        return Rank.of(rank);
     }
 
     public void skipConstantWord(int count) {

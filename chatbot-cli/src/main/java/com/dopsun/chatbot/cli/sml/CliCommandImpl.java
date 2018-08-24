@@ -9,6 +9,7 @@ import java.util.Objects;
 
 import com.dopsun.chatbot.cli.Argument;
 import com.dopsun.chatbot.cli.Command;
+import com.dopsun.chatbot.cli.Rank;
 
 /**
  * @author Dop Sun
@@ -17,10 +18,10 @@ import com.dopsun.chatbot.cli.Command;
 final class CliCommandImpl implements Command {
     private final String name;
     private final String template;
-    private final int rank;
+    private final Rank rank;
     private final List<Argument> argList;
 
-    public CliCommandImpl(String name, String template, int rank, List<Argument> argList) {
+    public CliCommandImpl(String name, String template, Rank rank, List<Argument> argList) {
         Objects.requireNonNull(name);
         Objects.requireNonNull(template);
         Objects.requireNonNull(argList);
@@ -44,7 +45,7 @@ final class CliCommandImpl implements Command {
     }
 
     @Override
-    public int rank() {
+    public Rank rank() {
         return rank;
     }
 

@@ -16,6 +16,7 @@ import java.util.Optional;
 
 import com.dopsun.chatbot.cli.Argument;
 import com.dopsun.chatbot.cli.Command;
+import com.dopsun.chatbot.cli.Rank;
 
 /**
  * @author Dop Sun
@@ -79,7 +80,8 @@ public class TrainingSetReader {
             } else if (line.startsWith("  template:")) {
                 itemBuilder.commandTemplate = line.substring("  template:".length()).trim();
             } else if (line.startsWith("  rank:")) {
-                itemBuilder.rank = Integer.parseInt(line.substring("  rank:".length()).trim());
+                itemBuilder.rank = Rank
+                        .of(Integer.parseInt(line.substring("  rank:".length()).trim()));
             } else if (line.startsWith("  feedback:")) {
                 itemBuilder.feedback = TrainingFeedback
                         .valueOf(line.substring("  feedback:".length()).trim());
@@ -132,7 +134,7 @@ public class TrainingSetReader {
         private String commandName;
         private String commandTemplate;
         private List<Argument> arguments = new ArrayList<>();
-        private int rank;
+        private Rank rank;
         private TrainingFeedback feedback;
 
         private String lastArgumentName;
@@ -179,7 +181,7 @@ public class TrainingSetReader {
 
         private final String name;
         private final String template;
-        private final int rank;
+        private final Rank rank;
         private final List<Argument> arguments;
 
         public CliCommandImpl(TrainingItemBuilder builder) {
@@ -202,7 +204,7 @@ public class TrainingSetReader {
         }
 
         @Override
-        public int rank() {
+        public Rank rank() {
             return rank;
         }
 

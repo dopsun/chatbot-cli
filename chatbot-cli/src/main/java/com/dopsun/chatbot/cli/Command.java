@@ -4,7 +4,6 @@
 
 package com.dopsun.chatbot.cli;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -15,13 +14,6 @@ import java.util.Map;
  * @since 1.0.0
  */
 public interface Command {
-    /**
-     * Comparing two {@link Command} with its rank.
-     */
-    public static Comparator<Command> rankComparator = (c1, c2) -> {
-        return Integer.compare(c1.rank(), c2.rank());
-    };
-
     /**
      * @return name of command.
      */
@@ -66,5 +58,5 @@ public interface Command {
      * 
      * @return rank of this command.
      */
-    int rank();
+    Rank rank();
 }
