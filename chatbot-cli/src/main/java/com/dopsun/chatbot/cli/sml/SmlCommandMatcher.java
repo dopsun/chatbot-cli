@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import com.dopsun.chatbot.cli.CommandAndRank;
+import com.dopsun.chatbot.cli.Command;
 import com.dopsun.chatbot.cli.input.CommandItem;
 
 /**
@@ -38,12 +38,12 @@ final class SmlCommandMatcher {
      * @param commandText
      * @return
      */
-    public List<CommandAndRank> tryParse(String commandText) {
+    public List<Command> tryParse(String commandText) {
         Objects.requireNonNull(commandText);
 
-        List<CommandAndRank> list = new ArrayList<>();
+        List<Command> list = new ArrayList<>();
         for (SmlSentenceMatcher inputMatcher : inputMatcherList) {
-            Optional<CommandAndRank> optCommandAndRank = inputMatcher.parse(commandText);
+            Optional<Command> optCommandAndRank = inputMatcher.parse(commandText);
 
             if (optCommandAndRank.isPresent()) {
                 list.add(optCommandAndRank.get());

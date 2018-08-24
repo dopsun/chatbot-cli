@@ -72,6 +72,9 @@ public class TrainingSetWriter implements AutoCloseable {
         writer.write("\n  template: ");
         writer.write(command.template());
 
+        writer.write("\n  rank: ");
+        writer.write(command.rank());
+
         List<Argument> args = command.arguments();
         if (!args.isEmpty()) {
             writer.write("\n  arguments: ");

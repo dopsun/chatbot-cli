@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import com.dopsun.chatbot.cli.CommandAndRank;
+import com.dopsun.chatbot.cli.Command;
 import com.dopsun.chatbot.cli.ParseResult;
 import com.dopsun.chatbot.cli.Parser;
 import com.dopsun.chatbot.cli.input.CommandItem;
@@ -62,10 +62,10 @@ final class SmlCliParser implements Parser {
         ParseResultBuilder builder = ParseResultBuilder.create();
 
         for (SmlCommandMatcher matcher : matcherList) {
-            List<CommandAndRank> commandList = matcher.tryParse(commandText);
+            List<Command> commandList = matcher.tryParse(commandText);
 
-            for (CommandAndRank commandAndRank : commandList) {
-                builder.add(commandAndRank);
+            for (Command command : commandList) {
+                builder.add(command);
             }
         }
 

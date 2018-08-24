@@ -17,15 +17,17 @@ import com.dopsun.chatbot.cli.Command;
 final class CliCommandImpl implements Command {
     private final String name;
     private final String template;
+    private final int rank;
     private final List<Argument> argList;
 
-    public CliCommandImpl(String name, String template, List<Argument> argList) {
+    public CliCommandImpl(String name, String template, int rank, List<Argument> argList) {
         Objects.requireNonNull(name);
         Objects.requireNonNull(template);
         Objects.requireNonNull(argList);
 
         this.name = name;
         this.template = template;
+        this.rank = rank;
         this.argList = argList;
     }
 
@@ -39,6 +41,11 @@ final class CliCommandImpl implements Command {
      */
     public String template() {
         return template;
+    }
+
+    @Override
+    public int rank() {
+        return rank;
     }
 
     @Override

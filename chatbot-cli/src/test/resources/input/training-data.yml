@@ -3,6 +3,7 @@ training-set:
   feedback: NEUTRAL
   command: get_contact
   template: get contact ${contact-hint}
+  rank: 5
   arguments:
   - name: contact-hint
     value: xyz

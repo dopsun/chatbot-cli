@@ -21,7 +21,7 @@ public interface ParseResult {
      * @return first command matched.
      */
     default Command command() {
-        return allCommands().get(0).command();
+        return allCommands().get(0);
     }
 
     /**
@@ -33,5 +33,5 @@ public interface ParseResult {
      * 
      * @return list of commands matched.
      */
-    List<CommandAndRank> allCommands();
+    List<Command> allCommands();
 }

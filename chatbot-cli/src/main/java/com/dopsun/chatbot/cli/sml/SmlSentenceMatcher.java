@@ -10,7 +10,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import com.dopsun.chatbot.cli.Argument;
-import com.dopsun.chatbot.cli.CommandAndRank;
+import com.dopsun.chatbot.cli.Command;
 
 /**
  * @author Dop Sun
@@ -106,7 +106,7 @@ final class SmlSentenceMatcher {
      * @param commandText
      * @return
      */
-    public Optional<CommandAndRank> parse(String commandText) {
+    public Optional<Command> parse(String commandText) {
         Objects.requireNonNull(commandText);
 
         RankCalculator rankCalc = new RankCalculator();
@@ -170,11 +170,9 @@ final class SmlSentenceMatcher {
             return Optional.empty();
         }
 
-        CliCommandImpl cliCommand = new CliCommandImpl(commandName, template, argList);
-
-        CommandAndRank commandAndRank = new CommandAndRank(cliCommand, rankCalc.rank());
-
-        return Optional.of(commandAndRank);
+        CliCommandImpl cliCommand = new CliCommandImpl(commandName, template, rankCalc.rank(),
+                argList);
+        return Optional.of(cliCommand);
     }
 
     static abstract class Part {

@@ -78,6 +78,8 @@ public class TrainingSetReader {
                 itemBuilder.commandName = line.substring("  command:".length()).trim();
             } else if (line.startsWith("  template:")) {
                 itemBuilder.commandTemplate = line.substring("  template:".length()).trim();
+            } else if (line.startsWith("  rank:")) {
+                itemBuilder.rank = Integer.parseInt(line.substring("  rank:".length()).trim());
             } else if (line.startsWith("  feedback:")) {
                 itemBuilder.feedback = TrainingFeedback
                         .valueOf(line.substring("  feedback:".length()).trim());
@@ -130,6 +132,7 @@ public class TrainingSetReader {
         private String commandName;
         private String commandTemplate;
         private List<Argument> arguments = new ArrayList<>();
+        private int rank;
         private TrainingFeedback feedback;
 
         private String lastArgumentName;
@@ -176,6 +179,7 @@ public class TrainingSetReader {
 
         private final String name;
         private final String template;
+        private final int rank;
         private final List<Argument> arguments;
 
         public CliCommandImpl(TrainingItemBuilder builder) {
@@ -183,6 +187,7 @@ public class TrainingSetReader {
 
             this.name = Objects.requireNonNull(builder.commandName);
             this.template = Objects.requireNonNull(builder.commandTemplate);
+            this.rank = builder.rank;
             this.arguments = Objects.requireNonNull(builder.arguments);
         }
 
@@ -194,6 +199,11 @@ public class TrainingSetReader {
         @Override
         public String template() {
             return template;
+        }
+
+        @Override
+        public int rank() {
+            return rank;
         }
 
         @Override

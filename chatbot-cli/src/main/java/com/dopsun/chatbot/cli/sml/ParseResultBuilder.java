@@ -10,8 +10,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.dopsun.chatbot.cli.Command;
 import com.dopsun.chatbot.cli.ParseResult;
-import com.dopsun.chatbot.cli.CommandAndRank;
 
 /**
  * @author Dop Sun
@@ -25,7 +25,7 @@ final class ParseResultBuilder {
         return new ParseResultBuilder();
     }
 
-    private final List<CommandAndRank> commands = new ArrayList<>();
+    private final List<Command> commands = new ArrayList<>();
 
     private ParseResultBuilder() {
 
@@ -39,21 +39,21 @@ final class ParseResultBuilder {
         return Optional.of(new ParseResultImpl(this));
     }
 
-    public void add(CommandAndRank commandAndRank) {
-        Objects.requireNonNull(commandAndRank);
+    public void add(Command command) {
+        Objects.requireNonNull(command);
 
-        this.commands.add(commandAndRank);
+        this.commands.add(command);
     }
 
     static class ParseResultImpl implements ParseResult {
-        private final List<CommandAndRank> allCommands;
+        private final List<Command> allCommands;
 
         private ParseResultImpl(ParseResultBuilder builder) {
             Objects.requireNonNull(builder);
 
             /** @formatter:off */
             this.allCommands = builder.commands.stream()
-                    .sorted(CommandAndRank.rankComparator)
+                    .sorted(Command.rankComparator)
                     .collect(Collectors.toList());
             /** @formatter:on */
         }
@@ -61,7 +61,7 @@ final class ParseResultBuilder {
         /**
          * @return the altCommands
          */
-        public List<CommandAndRank> allCommands() {
+        public List<Command> allCommands() {
             return allCommands;
         }
     }
