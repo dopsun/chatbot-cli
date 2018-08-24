@@ -12,9 +12,6 @@ import java.util.OptionalInt;
 
 import com.dopsun.chatbot.cli.Argument;
 import com.dopsun.chatbot.cli.Command;
-import com.dopsun.chatbot.cli.ext.AggregatedWordMatcher;
-import com.dopsun.chatbot.cli.ext.FullWordMatcher;
-import com.dopsun.chatbot.cli.ext.PrefixWordMatcher;
 import com.dopsun.chatbot.cli.ext.WordMatcher;
 import com.dopsun.chatbot.cli.ext.WordMatcherFactory;
 
@@ -65,27 +62,27 @@ final class SmlSentenceMatcher {
     private static final String START_TAG = "${";
     private static final String STOP_TAG = "}";
 
-    private final List<WordMatcherFactory<?>> wordMatcherFactoiries;
+    private final WordMatcherFactory<?> wordMatcherFactory;
 
     private final String commandName;
     private final String template;
     private final List<Part> partList = new ArrayList<>();
 
     /**
+     * @param wordMatcherFactory
      * @param commandName
      * @param template
      */
-    public SmlSentenceMatcher(String commandName, String template) {
+    public SmlSentenceMatcher(WordMatcherFactory<?> wordMatcherFactory, String commandName,
+            String template) {
+        Objects.requireNonNull(wordMatcherFactory);
         Objects.requireNonNull(commandName);
         Objects.requireNonNull(template);
 
         this.commandName = commandName;
         this.template = template;
 
-        // FIXME: this should be moved to other place and ensure it's extensiable.
-        this.wordMatcherFactoiries = new ArrayList<>();
-        this.wordMatcherFactoiries.add(FullWordMatcher.newFactory());
-        this.wordMatcherFactoiries.add(PrefixWordMatcher.newFactory());
+        this.wordMatcherFactory = wordMatcherFactory;
 
         int index = 0;
         while (index < template.length()) {
@@ -213,13 +210,7 @@ final class SmlSentenceMatcher {
             for (String word : wordArray) {
                 String temp = word.trim().toLowerCase();
                 if (temp.length() > 0) {
-                    AggregatedWordMatcher.Builder builder = AggregatedWordMatcher.newBuilder();
-
-                    for (WordMatcherFactory<?> factory : wordMatcherFactoiries) {
-                        builder.add(factory.compile(temp));
-                    }
-
-                    wordMatchList.add(builder.build());
+                    wordMatchList.add(wordMatcherFactory.compile(temp));
                 }
             }
         }

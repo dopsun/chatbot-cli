@@ -12,6 +12,8 @@ import java.util.Optional;
 import com.dopsun.chatbot.cli.Command;
 import com.dopsun.chatbot.cli.ParseResult;
 import com.dopsun.chatbot.cli.Parser;
+import com.dopsun.chatbot.cli.ext.CompositeWordMatcherFactory;
+import com.dopsun.chatbot.cli.ext.WordMatcherFactory;
 import com.dopsun.chatbot.cli.input.CommandItem;
 import com.dopsun.chatbot.cli.input.CommandSet;
 
@@ -35,9 +37,12 @@ final class SmlCliParser implements Parser {
 
         this.tracer = new ParserTracerWrapper(builder.parserTracer());
 
+        WordMatcherFactory<?> wordMatcherFactory = builder.wordMatcherFactory()
+                .orElse(CompositeWordMatcherFactory.createDefault());
+
         for (CommandSet commandSet : builder.commandSet()) {
             for (CommandItem commandItem : commandSet.items()) {
-                SmlCommandMatcher matcher = new SmlCommandMatcher(commandItem);
+                SmlCommandMatcher matcher = new SmlCommandMatcher(commandItem, wordMatcherFactory);
                 matcherList.add(matcher);
             }
         }
