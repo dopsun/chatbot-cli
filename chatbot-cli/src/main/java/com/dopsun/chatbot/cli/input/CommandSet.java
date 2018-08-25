@@ -4,7 +4,7 @@
 
 package com.dopsun.chatbot.cli.input;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author Dop Sun
@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface CommandSet {
     /**
-     * @return
+     * @param itemVisitor
      */
-    List<CommandItem> items();
+    void accept(Consumer<CommandItem> itemVisitor);
 }

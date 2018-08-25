@@ -14,7 +14,6 @@ import com.dopsun.chatbot.cli.ParseResult;
 import com.dopsun.chatbot.cli.Parser;
 import com.dopsun.chatbot.cli.ext.CompositeWordMatcherFactory;
 import com.dopsun.chatbot.cli.ext.WordMatcherFactory;
-import com.dopsun.chatbot.cli.input.CommandItem;
 import com.dopsun.chatbot.cli.input.CommandSet;
 
 /**
@@ -41,10 +40,10 @@ final class SmlCliParser implements Parser {
                 .orElse(CompositeWordMatcherFactory.createDefault());
 
         for (CommandSet commandSet : builder.commandSet()) {
-            for (CommandItem commandItem : commandSet.items()) {
+            commandSet.accept(commandItem -> {
                 SmlCommandMatcher matcher = new SmlCommandMatcher(commandItem, wordMatcherFactory);
                 matcherList.add(matcher);
-            }
+            });
         }
     }
 

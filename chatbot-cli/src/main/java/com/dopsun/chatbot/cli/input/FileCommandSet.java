@@ -12,31 +12,29 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 /**
  * @author Dop Sun
  * @since 1.0.0
  */
-public final class CommandSetReader {
-    /**
-     * 
-     */
-    public CommandSetReader() {
-
-    }
+public final class FileCommandSet implements CommandSet {
+    private final Path path;
 
     /**
      * @param path
-     * @return
      */
-    public CommandSet read(Path path) {
+    public FileCommandSet(Path path) {
         Objects.requireNonNull(path);
 
+        this.path = path;
+    }
+
+    @Override
+    public void accept(Consumer<CommandItem> itemVisitor) {
         List<String> commandList = new ArrayList<>(); // keep sequence.
         Map<String, List<String>> map = new HashMap<>();
-
-        List<CommandItem> commandItems = new ArrayList<>();
 
         try (Stream<String> stream = Files.lines(path)) {
             stream.forEach(line -> {
@@ -66,26 +64,9 @@ public final class CommandSetReader {
 
         for (String commandName : commandList) {
             List<String> templates = map.get(commandName);
-            CommandItem dataItem = new CommandItemImpl(commandName, templates);
-            commandItems.add(dataItem);
-        }
+            CommandItem commandItem = new CommandItemImpl(commandName, templates);
 
-        CommandSetImpl result = new CommandSetImpl(commandItems);
-        return result;
-    }
-
-    static class CommandSetImpl implements CommandSet {
-        private final List<CommandItem> items;
-
-        public CommandSetImpl(List<CommandItem> items) {
-            Objects.requireNonNull(items);
-
-            this.items = items;
-        }
-
-        @Override
-        public List<CommandItem> items() {
-            return items;
+            itemVisitor.accept(commandItem);
         }
     }
 
