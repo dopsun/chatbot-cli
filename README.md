@@ -20,14 +20,13 @@ Here are parser features implemented/ planned:
   * In a single template, it may have optional/ alternative formates of certain part of the command.
 * Multiple commands can be matched for a certain input
   * All these matched commands are rated with rank, and highest rank chose by default, but dewveloper of chatbot can choose alternatives if needed.
+* Bot developer can extend the resolve logic to customize the matching logic.
 
 *To be added*
 
 * Command ranking is resolved by predefined rules together with [Reinforcement Machine Learning](https://en.wikipedia.org/wiki/Reinforcement_learning)
   * Selected command and user feedback can be recorded and as factors for resolving command in future.
   * User feedback cna be positive and negative, or no feedback.
-* 
-* Bot developer can extend the resolve logic to customize the matching logic.
 
 # How
 
