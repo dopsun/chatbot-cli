@@ -7,30 +7,93 @@ package com.dopsun.chatbot.cli.sml;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
-import com.dopsun.chatbot.cli.CliParser;
-import com.dopsun.chatbot.cli.CliParserBuilder;
-import com.dopsun.chatbot.cli.tds.DataSet;
+import com.dopsun.chatbot.cli.Parser;
+import com.dopsun.chatbot.cli.ParserBuilder;
+import com.dopsun.chatbot.cli.ParserTracer;
+import com.dopsun.chatbot.cli.ext.WordMatcherFactory;
+import com.dopsun.chatbot.cli.input.CommandSet;
+import com.dopsun.chatbot.cli.input.TrainingSet;
 
 /**
  * @author Dop Sun
  * @since 1.0.0
  */
-public class SmlCliParserBuilder implements CliParserBuilder {
-    private final List<DataSet> dataSets = new ArrayList<>();
+public final class SmlCliParserBuilder implements ParserBuilder {
+    private final List<CommandSet> commandSet = new ArrayList<>();
+    private final List<TrainingSet> trainingSets = new ArrayList<>();
+
+    private Optional<WordMatcherFactory> wordMatcherFactory = Optional.empty();
+
+    private Optional<ParserTracer> parserTracer = Optional.empty();
 
     @Override
-    public CliParser build() {
-        SmlCliParser parser = new SmlCliParser(dataSets);
-        return parser;
+    public Parser build() {
+        return new SmlCliParser(this);
+    }
+
+    /**
+     * @return the commandSet
+     */
+    public List<CommandSet> commandSet() {
+        return commandSet;
+    }
+
+    /**
+     * @return the trainingSets
+     */
+    public List<TrainingSet> trainingSets() {
+        return trainingSets;
+    }
+
+    /**
+     * @return the parserTracer
+     */
+    public Optional<ParserTracer> parserTracer() {
+        return parserTracer;
+    }
+
+    /**
+     * @param wordMatcherFactory
+     *            the wordMatcherFactory to set
+     */
+    public void setWordMatcherFactory(WordMatcherFactory wordMatcherFactory) {
+        Objects.requireNonNull(wordMatcherFactory);
+
+        this.wordMatcherFactory = Optional.of(wordMatcherFactory);
+    }
+
+    /**
+     * @return the wordMatcherFactory
+     */
+    public Optional<WordMatcherFactory> wordMatcherFactory() {
+        return wordMatcherFactory;
     }
 
     /**
      * @param dataSet
      */
-    public void add(DataSet dataSet) {
+    public void addCommandSet(CommandSet dataSet) {
         Objects.requireNonNull(dataSet);
 
-        this.dataSets.add(dataSet);
+        this.commandSet.add(dataSet);
+    }
+
+    /**
+     * @param trainingSet
+     */
+    public void addTrainingSet(TrainingSet trainingSet) {
+        Objects.requireNonNull(trainingSet);
+
+        this.trainingSets.add(trainingSet);
+    }
+
+    /**
+     * @param listener
+     *            the logger to set
+     */
+    public void setTracer(ParserTracer listener) {
+        this.parserTracer = Optional.of(listener);
     }
 }

@@ -8,20 +8,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.OptionalInt;
 
-import com.dopsun.chatbot.cli.CliArgument;
-import com.dopsun.chatbot.cli.CliParserException;
+import com.dopsun.chatbot.cli.Argument;
+import com.dopsun.chatbot.cli.Command;
+import com.dopsun.chatbot.cli.ext.WordMatcher;
+import com.dopsun.chatbot.cli.ext.WordMatcherFactory;
 
 /**
  * @author Dop Sun
  * @since 1.0.0
  */
-public class SmlSentenceMatcher {
+final class SmlSentenceMatcher {
     /**
      * @param sentence
      * @return
      */
-    public static List<WordAndLocation> splitSentence(String sentence) {
+    static List<WordAndLocation> splitSentence(String sentence) {
         Objects.requireNonNull(sentence);
 
         List<WordAndLocation> list = new ArrayList<>();
@@ -59,13 +62,27 @@ public class SmlSentenceMatcher {
     private static final String START_TAG = "${";
     private static final String STOP_TAG = "}";
 
+    private final WordMatcherFactory wordMatcherFactory;
+
+    private final String commandName;
+    private final String template;
     private final List<Part> partList = new ArrayList<>();
 
     /**
+     * @param wordMatcherFactory
+     * @param commandName
      * @param template
      */
-    public SmlSentenceMatcher(String template) {
+    public SmlSentenceMatcher(WordMatcherFactory wordMatcherFactory, String commandName,
+            String template) {
+        Objects.requireNonNull(wordMatcherFactory);
+        Objects.requireNonNull(commandName);
         Objects.requireNonNull(template);
+
+        this.commandName = commandName;
+        this.template = template;
+
+        this.wordMatcherFactory = wordMatcherFactory;
 
         int index = 0;
         while (index < template.length()) {
@@ -98,14 +115,15 @@ public class SmlSentenceMatcher {
     /**
      * @param commandText
      * @return
-     * @throws CliParserException
      */
-    public Optional<List<CliArgument>> parse(String commandText) throws CliParserException {
+    public Optional<Command> parse(String commandText) {
         Objects.requireNonNull(commandText);
+
+        RankCalculator rankCalc = new RankCalculator();
 
         int index = 0;
 
-        List<CliArgument> argList = new ArrayList<>();
+        List<Argument> argList = new ArrayList<>();
 
         VariablePart lastVarPart = null;
 
@@ -117,7 +135,7 @@ public class SmlSentenceMatcher {
 
             if (part instanceof ConstantPart) {
                 ConstantPart cpart = (ConstantPart) part;
-                StartAndLength startAndLength = cpart.find(commandText, index);
+                StartAndLength startAndLength = cpart.find(rankCalc, commandText, index);
                 if (startAndLength.start() < 0) {
                     // TODO: logging?
                     matched = false;
@@ -162,7 +180,9 @@ public class SmlSentenceMatcher {
             return Optional.empty();
         }
 
-        return Optional.of(argList);
+        CliCommandImpl cliCommand = new CliCommandImpl(commandName, template, rankCalc.rank(),
+                argList);
+        return Optional.of(cliCommand);
     }
 
     static abstract class Part {
@@ -180,8 +200,8 @@ public class SmlSentenceMatcher {
         }
     }
 
-    static class ConstantPart extends Part {
-        final List<SmlWordMatcher> wordMatchList = new ArrayList<>();
+    final class ConstantPart extends Part {
+        final List<WordMatcher> wordMatchList = new ArrayList<>();
 
         public ConstantPart(String name) {
             super(name);
@@ -190,29 +210,38 @@ public class SmlSentenceMatcher {
             for (String word : wordArray) {
                 String temp = word.trim().toLowerCase();
                 if (temp.length() > 0) {
-                    wordMatchList.add(new SmlWordMatcher(temp));
+                    wordMatchList.add(wordMatcherFactory.compile(temp));
                 }
             }
         }
 
-        public StartAndLength find(String input, int fromIndex) {
+        public StartAndLength find(RankCalculator rankCalc, String input, int fromIndex) {
             Objects.requireNonNull(input);
 
             String inputLower = input.substring(fromIndex).toLowerCase();
             List<WordAndLocation> wordList = splitSentence(inputLower);
 
             WordAndLocation first = null;
-            for (SmlWordMatcher wordMatcher : wordMatchList) {
+            WordAndLocation last = null;
+
+            for (WordMatcher wordMatcher : wordMatchList) {
                 while (wordList.size() > 0) {
-                    if (wordMatcher.match(wordList.get(0).word())) {
+                    OptionalInt optDiscount = wordMatcher.match(wordList.get(0).word());
+                    if (optDiscount.isPresent()) {
                         if (first == null) {
                             first = wordList.get(0);
+                        } else {
+                            last = wordList.get(0);
                         }
+
+                        rankCalc.discount(optDiscount.getAsInt());
+
+                        wordList.remove(0);
                         break;
                     }
 
                     wordList.remove(0);
-
+                    rankCalc.skipConstantWord(1);
                 }
 
                 if (wordList.size() == 0) {
@@ -220,18 +249,10 @@ public class SmlSentenceMatcher {
                 }
             }
 
-            if (first == null) {
-                first = wordList.get(0);
-            }
-            
-            if (first == null) {
-                return wordList.get(0).location().offset(fromIndex);
+            if (last == null) {
+                return first.location().offset(fromIndex);
             } else {
-                if (first == wordList.get(0)) {
-                    return wordList.get(0).location().offset(fromIndex);
-                } else {
-                    return first.location().merge(wordList.get(0).location()).offset(fromIndex);
-                }
+                return first.location().merge(last.location()).offset(fromIndex);
             }
         }
     }
@@ -242,7 +263,7 @@ public class SmlSentenceMatcher {
         }
     }
 
-    static class CliArgumentImpl implements CliArgument {
+    static class CliArgumentImpl implements Argument {
         private final String name;
         private final Optional<String> value;
 

@@ -9,48 +9,71 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import com.dopsun.chatbot.cli.CliParseResult;
-import com.dopsun.chatbot.cli.CliParser;
-import com.dopsun.chatbot.cli.CliParserException;
-import com.dopsun.chatbot.cli.tds.DataItem;
-import com.dopsun.chatbot.cli.tds.DataSet;
+import com.dopsun.chatbot.cli.Command;
+import com.dopsun.chatbot.cli.ParseResult;
+import com.dopsun.chatbot.cli.Parser;
+import com.dopsun.chatbot.cli.ext.CompositeWordMatcherFactory;
+import com.dopsun.chatbot.cli.ext.WordMatcherFactory;
+import com.dopsun.chatbot.cli.input.CommandSet;
 
 /**
  * @author Dop Sun
  * @since 1.0.0
  */
-public class SmlCliParser implements CliParser {
-    private final List<SmlMatcher> matcherList = new ArrayList<>();
+final class SmlCliParser implements Parser {
+    private final ParserTracerWrapper tracer;
+    private final List<SmlCommandMatcher> matcherList = new ArrayList<>();
 
     /**
-     * @param dataSets
+     * @param commandSets
+     * @param traceListener
      */
-    public SmlCliParser(List<DataSet> dataSets) {
-        Objects.requireNonNull(dataSets);
-
-        for (DataSet ds : dataSets) {
-            for (DataItem di : ds.items()) {
-                SmlMatcher matcher = new SmlMatcher(di);
-                matcherList.add(matcher);
-            }
+    SmlCliParser(SmlCliParserBuilder builder) {
+        Objects.requireNonNull(builder);
+        if (builder.commandSet().isEmpty()) {
+            throw new IllegalStateException("Empty command set.");
         }
+
+        this.tracer = new ParserTracerWrapper(builder.parserTracer());
+
+        WordMatcherFactory wordMatcherFactory = builder.wordMatcherFactory()
+                .orElse(CompositeWordMatcherFactory.createDefault());
+
+        for (CommandSet commandSet : builder.commandSet()) {
+            commandSet.accept(commandItem -> {
+                SmlCommandMatcher matcher = new SmlCommandMatcher(commandItem, wordMatcherFactory);
+                matcherList.add(matcher);
+            });
+        }
+    }
+
+    /**
+     * @return
+     */
+    ParserTracerWrapper tracer() {
+        return this.tracer;
     }
 
     /**
      * FIXME: if matchList is large, then ForkJoinPool can be used.
      */
     @Override
-    public Optional<CliParseResult> tryParse(String commandText) throws CliParserException {
+    public Optional<ParseResult> tryParse(String commandText) {
         Objects.requireNonNull(commandText);
 
-        for (SmlMatcher matcher : matcherList) {
-            Optional<CliParseResult> optResult = matcher.tryParse(commandText);
-            if (optResult.isPresent()) {
-                return optResult;
+        tracer.enterMethod(this, "tryParse", commandText);
+
+        ParseResultBuilder builder = ParseResultBuilder.create();
+
+        for (SmlCommandMatcher matcher : matcherList) {
+            List<Command> commandList = matcher.tryParse(commandText);
+
+            for (Command command : commandList) {
+                builder.add(command);
             }
         }
 
-        return Optional.empty();
+        return builder.build();
     }
 
 }

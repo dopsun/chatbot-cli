@@ -8,7 +8,7 @@ package com.dopsun.chatbot.cli.sml;
  * @author Dop Sun
  * @since 1.0.0
  */
-public class StartAndLength {
+final class StartAndLength {
     /**
      * 
      */

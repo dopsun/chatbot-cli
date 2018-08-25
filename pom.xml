@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.dopsun.chatbot</groupId>
 	<artifactId>chatbot-cli-parent</artifactId>
-	<version>0.0.1</version>
+	<version>0.2.0</version>
 	<packaging>pom</packaging>
 	<name>ChatBot CLI Parent POM</name>
 	<description>ChatBot CLI Utils.</description>

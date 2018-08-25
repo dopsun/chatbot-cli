@@ -10,7 +10,7 @@ import java.util.Objects;
  * @author Dop Sun
  * @since 1.0.0
  */
-public class WordAndLocation {
+final class WordAndLocation {
     private final String word;
     private final StartAndLength location;
 

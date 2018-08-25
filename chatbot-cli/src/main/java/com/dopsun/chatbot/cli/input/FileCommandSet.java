@@ -2,7 +2,7 @@
  * Copyright (c) 2018 Dop Sun. All rights reserved.
  */
 
-package com.dopsun.chatbot.cli.tds;
+package com.dopsun.chatbot.cli.input;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -12,21 +12,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 /**
  * @author Dop Sun
  * @since 1.0.0
  */
-public class TemplateDataSet implements DataSet {
-    private final List<DataItem> dataItems = new ArrayList<>();
+public final class FileCommandSet implements CommandSet {
+    private final Path path;
 
     /**
      * @param path
      */
-    public TemplateDataSet(Path path) {
+    public FileCommandSet(Path path) {
         Objects.requireNonNull(path);
 
+        this.path = path;
+    }
+
+    @Override
+    public void accept(Consumer<CommandItem> itemVisitor) {
         List<String> commandList = new ArrayList<>(); // keep sequence.
         Map<String, List<String>> map = new HashMap<>();
 
@@ -53,18 +59,42 @@ public class TemplateDataSet implements DataSet {
                 list.add(template);
             });
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Failed to read command.", e);
         }
 
         for (String commandName : commandList) {
             List<String> templates = map.get(commandName);
-            DataItem dataItem = new TemplateDataItem(commandName, templates);
-            dataItems.add(dataItem);
+            CommandItem commandItem = new CommandItemImpl(commandName, templates);
+
+            itemVisitor.accept(commandItem);
         }
     }
 
-    @Override
-    public List<DataItem> items() {
-        return dataItems;
+    static class CommandItemImpl implements CommandItem {
+        private final String commandName;
+        private final List<String> templates;
+
+        /**
+         * @param commandName
+         * @param templates
+         */
+        public CommandItemImpl(String commandName, final List<String> templates) {
+            Objects.requireNonNull(commandName);
+            Objects.requireNonNull(templates);
+
+            this.commandName = commandName;
+            this.templates = templates;
+        }
+
+        @Override
+        public String commandName() {
+            return commandName;
+        }
+
+        @Override
+        public List<String> templates() {
+            return templates;
+        }
+
     }
 }

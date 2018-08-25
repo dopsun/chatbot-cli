@@ -8,13 +8,13 @@ package com.dopsun.chatbot.cli;
  * @author Dop Sun
  * @since 1.0.0
  */
-public class CliParserException extends Exception {
+public class ParserException extends Exception {
     private static final long serialVersionUID = -5527624306689736775L;
 
     /**
      * 
      */
-    public CliParserException() {
+    public ParserException() {
         super();
     }
 
@@ -22,7 +22,7 @@ public class CliParserException extends Exception {
      * @param message
      * 
      */
-    public CliParserException(String message) {
+    public ParserException(String message) {
         super(message);
     }
 
@@ -30,7 +30,7 @@ public class CliParserException extends Exception {
      * @param message
      * @param cause
      */
-    public CliParserException(String message, Throwable cause) {
+    public ParserException(String message, Throwable cause) {
         super(message, cause);
     }
 }
