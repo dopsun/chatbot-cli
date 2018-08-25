@@ -20,17 +20,17 @@ import com.dopsun.chatbot.cli.Command;
  * @author Dop Sun
  * @since 1.0.0
  */
-public class TrainingSetWriter implements AutoCloseable {
+public class FileTrainingSetWriter implements AutoCloseable {
     /**
      * @param path
      * @return
      * @throws IOException
      */
-    public static TrainingSetWriter createNew(Path path) throws IOException {
+    public static FileTrainingSetWriter createNew(Path path) throws IOException {
         BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8,
                 StandardOpenOption.CREATE_NEW);
         writer.write("training-set:\n");
-        return new TrainingSetWriter(writer);
+        return new FileTrainingSetWriter(writer);
     }
 
     /**
@@ -38,16 +38,16 @@ public class TrainingSetWriter implements AutoCloseable {
      * @return
      * @throws IOException
      */
-    public static TrainingSetWriter append(Path path) throws IOException {
+    public static FileTrainingSetWriter append(Path path) throws IOException {
         BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8,
                 StandardOpenOption.APPEND);
 
-        return new TrainingSetWriter(writer);
+        return new FileTrainingSetWriter(writer);
     }
 
     private final BufferedWriter writer;
 
-    private TrainingSetWriter(BufferedWriter writer) {
+    private FileTrainingSetWriter(BufferedWriter writer) {
         Objects.requireNonNull(writer);
 
         this.writer = writer;
