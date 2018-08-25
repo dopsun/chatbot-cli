@@ -44,13 +44,11 @@ public static void prepareParser() throws URISyntaxException {
     URL csUrl = ClassLoader.getSystemResource("input/command-data.properties");
     Path csPath = Paths.get(csUrl.toURI());
 
-    CommandSetReader csReader = new CommandSetReader();
-    CommandSet commandSet = csReader.read(csPath);
+    CommandSet commandSet = new FileCommandSet(csPath);
 
     URL tsUrl = ClassLoader.getSystemResource("input/training-data.yml");
     Path tsPath = Paths.get(tsUrl.toURI());
-    TrainingSetReader tsReader = new TrainingSetReader();
-    TrainingSet trainingSet = tsReader.read(tsPath);
+    TrainingSet trainingSet = new FileTrainingSet(tsPath);
 
     ParserBuilder parserBuilder = Parser.newBuilder();
     parserBuilder.addCommandSet(commandSet);
