@@ -4,7 +4,7 @@
 
 package com.dopsun.chatbot.cli.input;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author Dop Sun
@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface TrainingSet {
     /**
-     * @return
+     * @param itemVisitor
      */
-    List<TrainingItem> items();
+    void accept(Consumer<TrainingItem> itemVisitor);
 }

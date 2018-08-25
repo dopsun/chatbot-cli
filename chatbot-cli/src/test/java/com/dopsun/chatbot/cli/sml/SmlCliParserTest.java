@@ -26,7 +26,7 @@ import com.dopsun.chatbot.cli.ParserException;
 import com.dopsun.chatbot.cli.input.CommandSet;
 import com.dopsun.chatbot.cli.input.CommandSetReader;
 import com.dopsun.chatbot.cli.input.TrainingSet;
-import com.dopsun.chatbot.cli.input.TrainingSetReader;
+import com.dopsun.chatbot.cli.input.FileTrainingSet;
 import com.dopsun.chatbot.cli.sml.PropertiesScript.ScriptCase;
 
 /**
@@ -47,8 +47,7 @@ public class SmlCliParserTest {
 
         URL tsUrl = ClassLoader.getSystemResource("input/training-data.yml");
         Path tsPath = Paths.get(tsUrl.toURI());
-        TrainingSetReader tsReader = new TrainingSetReader();
-        TrainingSet trainingSet = tsReader.read(tsPath);
+        TrainingSet trainingSet = new FileTrainingSet(tsPath);
 
         ParserBuilder parserBuilder = Parser.newBuilder();
         parserBuilder.addCommandSet(commandSet);

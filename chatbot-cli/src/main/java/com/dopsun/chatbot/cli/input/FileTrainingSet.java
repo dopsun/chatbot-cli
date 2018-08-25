@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import com.dopsun.chatbot.cli.Argument;
 import com.dopsun.chatbot.cli.Command;
@@ -22,31 +23,35 @@ import com.dopsun.chatbot.cli.Rank;
  * @author Dop Sun
  * @since 1.0.0
  */
-public class TrainingSetReader {
-    /**
-     * 
-     */
-    public TrainingSetReader() {
-    }
+public final class FileTrainingSet implements TrainingSet {
+    private final Path path;
 
     /**
      * @param path
-     * @return
-     * @throws IOException
      */
-    public TrainingSet read(Path path) throws IOException {
-        try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
-            return read(reader);
+    public FileTrainingSet(Path path) {
+        Objects.requireNonNull(path);
+
+        this.path = path;
+    }
+
+    @Override
+    public void accept(Consumer<TrainingItem> itemVisitor) {
+        try {
+            try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
+                read(reader, itemVisitor);
+            }
+        } catch (IOException ex) {
+            throw new RuntimeException("Failed to read the training set.", ex);
         }
     }
 
-    private TrainingSet read(BufferedReader reader) throws IOException {
+    private void read(BufferedReader reader, Consumer<TrainingItem> itemVisitor)
+            throws IOException {
         String firstline = reader.readLine();
         if (!"training-set:".equals(firstline)) {
             throw new IllegalStateException("Invalid header.");
         }
-
-        List<TrainingItem> itemList = new ArrayList<>();
 
         TrainingItemBuilder itemBuilder = null;
         while (true) {
@@ -66,8 +71,7 @@ public class TrainingSetReader {
                 line = line.replaceFirst("- ", "  ");
 
                 if (itemBuilder != null) {
-                    TrainingItem item = itemBuilder.build();
-                    itemList.add(item);
+                    itemVisitor.accept(itemBuilder.build());
                 }
 
                 itemBuilder = new TrainingItemBuilder();
@@ -109,23 +113,7 @@ public class TrainingSetReader {
         }
 
         if (itemBuilder != null) {
-            itemList.add(itemBuilder.build());
-        }
-
-        return new TrainingSetImpl(itemList);
-    }
-
-    static class TrainingSetImpl implements TrainingSet {
-        private final List<TrainingItem> itemList;
-
-        public TrainingSetImpl(List<TrainingItem> itemList) {
-            Objects.requireNonNull(itemList);
-            this.itemList = itemList;
-        }
-
-        @Override
-        public List<TrainingItem> items() {
-            return itemList;
+            itemVisitor.accept(itemBuilder.build());
         }
     }
 
