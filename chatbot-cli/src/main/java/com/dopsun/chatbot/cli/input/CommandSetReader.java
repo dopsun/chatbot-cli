@@ -61,7 +61,7 @@ public final class CommandSetReader {
                 list.add(template);
             });
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Failed to read command.", e);
         }
 
         for (String commandName : commandList) {
