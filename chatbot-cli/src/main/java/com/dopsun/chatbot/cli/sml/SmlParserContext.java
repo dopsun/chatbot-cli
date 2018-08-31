@@ -15,6 +15,11 @@ interface SmlParserContext {
     /**
      * @return
      */
+    ParserTracerWrapper tracer();
+
+    /**
+     * @return
+     */
     WordMatcherFactory wordMatcherFactory();
 
     /**
