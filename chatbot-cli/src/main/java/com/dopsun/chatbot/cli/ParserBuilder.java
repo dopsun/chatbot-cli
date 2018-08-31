@@ -30,6 +30,11 @@ public interface ParserBuilder {
     void addTrainingSet(TrainingSet trainingSet);
 
     /**
+     * @param matcherCost
+     */
+    void setMatcherCost(MatcherCost matcherCost);
+
+    /**
      * @param tracer
      *            the tracer to set
      */

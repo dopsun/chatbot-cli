@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.OptionalInt;
 
+import com.dopsun.chatbot.cli.MatcherCost;
+
 /**
  * @author Dop Sun
  * @since 1.0.0
@@ -59,12 +61,15 @@ public final class CompositeWordMatcherFactory implements WordMatcherFactory {
         }
 
         @Override
-        public OptionalInt match(String input) {
+        public OptionalInt match(MatcherCost matcherCost, String input) {
+            Objects.requireNonNull(matcherCost);
+            Objects.requireNonNull(input);
+
             int lowestRank = Integer.MAX_VALUE;
             boolean matched = false;
 
             for (WordMatcher wordMatcher : wordMatchers) {
-                OptionalInt optDiscount = wordMatcher.match(input);
+                OptionalInt optDiscount = wordMatcher.match(matcherCost, input);
                 if (optDiscount.isPresent()) {
                     matched = true;
                     lowestRank = Math.min(lowestRank, optDiscount.getAsInt());

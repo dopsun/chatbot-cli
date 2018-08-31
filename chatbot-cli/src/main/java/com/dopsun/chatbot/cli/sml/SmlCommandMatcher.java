@@ -10,7 +10,6 @@ import java.util.Objects;
 import java.util.Optional;
 
 import com.dopsun.chatbot.cli.Command;
-import com.dopsun.chatbot.cli.ext.WordMatcherFactory;
 import com.dopsun.chatbot.cli.input.CommandItem;
 
 /**
@@ -21,17 +20,17 @@ final class SmlCommandMatcher {
     private final List<SmlSentenceMatcher> inputMatcherList;
 
     /**
+     * @param context
      * @param dataItem
-     * @param wordMatcherFactory
      */
-    public SmlCommandMatcher(CommandItem dataItem, WordMatcherFactory wordMatcherFactory) {
+    public SmlCommandMatcher(SmlParserContext context, CommandItem dataItem) {
+        Objects.requireNonNull(context);
         Objects.requireNonNull(dataItem);
 
         List<SmlSentenceMatcher> tempList = new ArrayList<>();
 
         for (String template : dataItem.templates()) {
-            tempList.add(
-                    new SmlSentenceMatcher(wordMatcherFactory, dataItem.commandName(), template));
+            tempList.add(new SmlSentenceMatcher(context, dataItem.commandName(), template));
         }
 
         this.inputMatcherList = tempList;

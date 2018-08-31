@@ -8,16 +8,14 @@ import java.util.Objects;
 import java.util.OptionalInt;
 import java.util.regex.Pattern;
 
+import com.dopsun.chatbot.cli.MatcherCost;
+import com.dopsun.chatbot.cli.MatcherCostType;
+
 /**
  * @author Dop Sun
  * @since 1.0.0
  */
 public final class FullWordMatcher implements WordMatcher {
-    /**
-     * Rank discount for this word matcher.
-     */
-    public static final int FULL_MATCH_RANK_DISCOUNT = 0;
-
     /**
      * @return
      */
@@ -115,13 +113,10 @@ public final class FullWordMatcher implements WordMatcher {
         this.fullMatchPattern = Pattern.compile("^" + patternString + "$");
     }
 
-    /**
-     * @param word
-     * @return <code>true</code> if word matches.
-     */
-    public OptionalInt match(String word) {
+    @Override
+    public OptionalInt match(MatcherCost matcherCost, String word) {
         if (fullMatchPattern.matcher(word).find()) {
-            return OptionalInt.of(FULL_MATCH_RANK_DISCOUNT);
+            return OptionalInt.of(matcherCost.getCost(MatcherCostType.FULL_WORD));
         }
 
         return OptionalInt.empty();

@@ -13,7 +13,6 @@ import java.util.OptionalInt;
 import com.dopsun.chatbot.cli.Argument;
 import com.dopsun.chatbot.cli.Command;
 import com.dopsun.chatbot.cli.ext.WordMatcher;
-import com.dopsun.chatbot.cli.ext.WordMatcherFactory;
 
 /**
  * @author Dop Sun
@@ -62,27 +61,24 @@ final class SmlSentenceMatcher {
     private static final String START_TAG = "${";
     private static final String STOP_TAG = "}";
 
-    private final WordMatcherFactory wordMatcherFactory;
-
+    private final SmlParserContext context;
     private final String commandName;
     private final String template;
     private final List<Part> partList = new ArrayList<>();
 
     /**
-     * @param wordMatcherFactory
+     * @param context
      * @param commandName
      * @param template
      */
-    public SmlSentenceMatcher(WordMatcherFactory wordMatcherFactory, String commandName,
-            String template) {
-        Objects.requireNonNull(wordMatcherFactory);
+    public SmlSentenceMatcher(SmlParserContext context, String commandName, String template) {
+        Objects.requireNonNull(context);
         Objects.requireNonNull(commandName);
         Objects.requireNonNull(template);
 
+        this.context = context;
         this.commandName = commandName;
         this.template = template;
-
-        this.wordMatcherFactory = wordMatcherFactory;
 
         int index = 0;
         while (index < template.length()) {
@@ -119,7 +115,7 @@ final class SmlSentenceMatcher {
     public Optional<Command> parse(String commandText) {
         Objects.requireNonNull(commandText);
 
-        RankCalculator rankCalc = new RankCalculator();
+        RankCalculator rankCalc = new RankCalculator(context.matcherCost());
 
         int index = 0;
 
@@ -210,7 +206,7 @@ final class SmlSentenceMatcher {
             for (String word : wordArray) {
                 String temp = word.trim().toLowerCase();
                 if (temp.length() > 0) {
-                    wordMatchList.add(wordMatcherFactory.compile(temp));
+                    wordMatchList.add(context.wordMatcherFactory().compile(temp));
                 }
             }
         }
@@ -226,7 +222,8 @@ final class SmlSentenceMatcher {
 
             for (WordMatcher wordMatcher : wordMatchList) {
                 while (wordList.size() > 0) {
-                    OptionalInt optDiscount = wordMatcher.match(wordList.get(0).word());
+                    OptionalInt optDiscount = wordMatcher.match(context.matcherCost(),
+                            wordList.get(0).word());
                     if (optDiscount.isPresent()) {
                         if (first == null) {
                             first = wordList.get(0);

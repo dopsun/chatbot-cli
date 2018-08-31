@@ -7,6 +7,9 @@ package com.dopsun.chatbot.cli.ext;
 import java.util.Objects;
 import java.util.OptionalInt;
 
+import com.dopsun.chatbot.cli.MatcherCost;
+import com.dopsun.chatbot.cli.MatcherCostType;
+
 /**
  * @author Dop Sun
  * @since 1.0.0
@@ -47,7 +50,8 @@ public final class PrefixWordMatcher implements WordMatcher {
     }
 
     @Override
-    public OptionalInt match(String input) {
+    public OptionalInt match(MatcherCost matcherCost, String input) {
+        Objects.requireNonNull(matcherCost);
         Objects.requireNonNull(input);
 
         String lowerInput = input.trim().toLowerCase();
@@ -56,7 +60,7 @@ public final class PrefixWordMatcher implements WordMatcher {
         }
 
         if (template.startsWith(lowerInput)) {
-            return OptionalInt.of(RANK_DISCOUNT_POINT);
+            return OptionalInt.of(matcherCost.getCost(MatcherCostType.PREFIX_ONLY));
         }
 
         return OptionalInt.empty();

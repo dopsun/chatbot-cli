@@ -4,6 +4,10 @@
 
 package com.dopsun.chatbot.cli.sml;
 
+import java.util.Objects;
+
+import com.dopsun.chatbot.cli.MatcherCost;
+import com.dopsun.chatbot.cli.MatcherCostType;
 import com.dopsun.chatbot.cli.Rank;
 
 /**
@@ -11,12 +15,14 @@ import com.dopsun.chatbot.cli.Rank;
  * @since 1.0.0
  */
 final class RankCalculator {
-    private static int SKIP_CONST_WORD_POINTS_PER_WORD = 5;
+    private final MatcherCost matcherCost;
 
     private int rank = 0;
 
-    public RankCalculator() {
+    public RankCalculator(MatcherCost matcherCost) {
+        Objects.requireNonNull(matcherCost);
 
+        this.matcherCost = matcherCost;
     }
 
     /**
@@ -31,7 +37,7 @@ final class RankCalculator {
             throw new IllegalArgumentException("illegal count: " + count);
         }
 
-        rank += count * SKIP_CONST_WORD_POINTS_PER_WORD;
+        rank += count * matcherCost.getCost(MatcherCostType.SKIP_ONE_CONST_WORD);
     }
 
     public void discount(int points) {

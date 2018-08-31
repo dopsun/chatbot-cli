@@ -19,12 +19,14 @@ import org.junit.Test;
 
 import com.dopsun.chatbot.cli.Argument;
 import com.dopsun.chatbot.cli.Command;
+import com.dopsun.chatbot.cli.MatcherCost;
 import com.dopsun.chatbot.cli.ParseResult;
 import com.dopsun.chatbot.cli.Parser;
 import com.dopsun.chatbot.cli.ParserBuilder;
 import com.dopsun.chatbot.cli.ParserException;
 import com.dopsun.chatbot.cli.input.CommandSet;
 import com.dopsun.chatbot.cli.input.FileCommandSet;
+import com.dopsun.chatbot.cli.input.FileMatchCostInput;
 import com.dopsun.chatbot.cli.input.FileTrainingSet;
 import com.dopsun.chatbot.cli.input.TrainingSet;
 import com.dopsun.chatbot.cli.sml.PropertiesScript.ScriptCase;
@@ -48,9 +50,14 @@ public class SmlCliParserTest {
         Path tsPath = Paths.get(tsUrl.toURI());
         TrainingSet trainingSet = new FileTrainingSet(tsPath);
 
+        URL mcUrl = ClassLoader.getSystemResource("input/match-cost.properties");
+        Path mcPath = Paths.get(mcUrl.toURI());
+        MatcherCost matchCostInput = new FileMatchCostInput(mcPath);
+
         ParserBuilder parserBuilder = Parser.newBuilder();
         parserBuilder.addCommandSet(commandSet);
         parserBuilder.addTrainingSet(trainingSet);
+        parserBuilder.setMatcherCost(matchCostInput);
 
         parserBuilder.setTracer(System.out::println);
         parser = parserBuilder.build();

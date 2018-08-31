@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import com.dopsun.chatbot.cli.MatcherCost;
 import com.dopsun.chatbot.cli.Parser;
 import com.dopsun.chatbot.cli.ParserBuilder;
 import com.dopsun.chatbot.cli.ParserTracer;
@@ -27,6 +28,8 @@ public final class SmlCliParserBuilder implements ParserBuilder {
     private Optional<WordMatcherFactory> wordMatcherFactory = Optional.empty();
 
     private Optional<ParserTracer> parserTracer = Optional.empty();
+
+    private Optional<MatcherCost> matchCost = Optional.empty();
 
     @Override
     public Parser build() {
@@ -69,6 +72,20 @@ public final class SmlCliParserBuilder implements ParserBuilder {
      */
     public Optional<WordMatcherFactory> wordMatcherFactory() {
         return wordMatcherFactory;
+    }
+
+    /**
+     * @return the matchCost
+     */
+    public Optional<MatcherCost> matcherCost() {
+        return matchCost;
+    }
+
+    @Override
+    public void setMatcherCost(MatcherCost matchCost) {
+        Objects.requireNonNull(matchCost);
+
+        this.matchCost = Optional.of(matchCost);
     }
 
     /**
