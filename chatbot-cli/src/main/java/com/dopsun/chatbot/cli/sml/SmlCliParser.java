@@ -4,6 +4,9 @@
 
 package com.dopsun.chatbot.cli.sml;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -16,6 +19,9 @@ import com.dopsun.chatbot.cli.Parser;
 import com.dopsun.chatbot.cli.ext.CompositeWordMatcherFactory;
 import com.dopsun.chatbot.cli.ext.WordMatcherFactory;
 import com.dopsun.chatbot.cli.input.CommandSet;
+import com.dopsun.chatbot.cli.input.FileTrainingSetWriter;
+import com.dopsun.chatbot.cli.input.TrainingFeedback;
+import com.dopsun.chatbot.cli.input.TrainingSetWriter;
 
 /**
  * @author Dop Sun
@@ -27,6 +33,8 @@ final class SmlCliParser implements Parser, SmlParserContext {
 
     private final WordMatcherFactory wordMatcherFactory;
     private final MatcherCost matcherCost;
+
+    private final TrainingSetWriter trainingSetWriter;
 
     /**
      * @param commandSets
@@ -51,6 +59,22 @@ final class SmlCliParser implements Parser, SmlParserContext {
         }
 
         this.matcherCost = builder.matcherCost().orElse(matcherCostType -> matcherCostType.value());
+
+        if (builder.outDir().isPresent()) {
+            String timestamp = LocalDateTime.now().toString();
+            Path dataPath = builder.outDir().get();
+
+            // TODO: make naming pattern configurable.
+            Path trainingDataPath = dataPath.resolve("training-data-" + timestamp + ".yml");
+            try {
+                this.trainingSetWriter = FileTrainingSetWriter.createNew(trainingDataPath);
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to create trainingData file.", e);
+            }
+        } else {
+            this.trainingSetWriter = (input, command, feedback) -> {
+            };
+        }
     }
 
     /**
@@ -91,7 +115,18 @@ final class SmlCliParser implements Parser, SmlParserContext {
             }
         }
 
-        return builder.build();
+        Optional<ParseResult> optResult = builder.build();
+        if (optResult.isPresent()) {
+            ParseResult parseResult = optResult.get();
+            try {
+                this.trainingSetWriter.write(commandText, parseResult.command(),
+                        TrainingFeedback.NEUTRAL);
+            } catch (IOException e) {
+                tracer.log(this, "Writer to trainingSet failed.");
+            }
+        }
+
+        return optResult;
     }
 
 }

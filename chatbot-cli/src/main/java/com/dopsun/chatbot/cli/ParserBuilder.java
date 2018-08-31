@@ -4,6 +4,8 @@
 
 package com.dopsun.chatbot.cli;
 
+import java.nio.file.Path;
+
 import com.dopsun.chatbot.cli.input.CommandSet;
 import com.dopsun.chatbot.cli.input.TrainingSet;
 
@@ -39,4 +41,9 @@ public interface ParserBuilder {
      *            the tracer to set
      */
     void setTracer(ParserTracer tracer);
+
+    /**
+     * @param outDir
+     */
+    void setOutDir(Path outDir);
 }

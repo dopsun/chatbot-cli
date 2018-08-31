@@ -4,6 +4,7 @@
 
 package com.dopsun.chatbot.cli.sml;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -30,6 +31,8 @@ public final class SmlCliParserBuilder implements ParserBuilder {
     private Optional<ParserTracer> parserTracer = Optional.empty();
 
     private Optional<MatcherCost> matchCost = Optional.empty();
+
+    private Optional<Path> outDir = Optional.empty();
 
     @Override
     public Parser build() {
@@ -79,6 +82,23 @@ public final class SmlCliParserBuilder implements ParserBuilder {
      */
     public Optional<MatcherCost> matcherCost() {
         return matchCost;
+    }
+
+    /**
+     * @return the outDir
+     */
+    public Optional<Path> outDir() {
+        return outDir;
+    }
+
+    /**
+     * @param outDir
+     *            the outDir to set
+     */
+    public void setOutDir(Path outDir) {
+        Objects.requireNonNull(outDir);
+
+        this.outDir = Optional.ofNullable(outDir);
     }
 
     @Override

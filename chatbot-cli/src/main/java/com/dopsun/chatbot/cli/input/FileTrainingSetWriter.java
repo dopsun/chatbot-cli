@@ -20,7 +20,7 @@ import com.dopsun.chatbot.cli.Command;
  * @author Dop Sun
  * @since 1.0.0
  */
-public class FileTrainingSetWriter implements AutoCloseable {
+public class FileTrainingSetWriter implements TrainingSetWriter, AutoCloseable {
     /**
      * @param path
      * @return
@@ -53,12 +53,7 @@ public class FileTrainingSetWriter implements AutoCloseable {
         this.writer = writer;
     }
 
-    /**
-     * @param input
-     * @param command
-     * @param feedback
-     * @throws IOException
-     */
+    @Override
     public void write(String input, Command command, TrainingFeedback feedback) throws IOException {
         writer.write("- input: ");
         writer.write(input);
@@ -73,7 +68,7 @@ public class FileTrainingSetWriter implements AutoCloseable {
         writer.write(command.template());
 
         writer.write("\n  rank: ");
-        writer.write(command.rank().value());
+        writer.write("" + command.rank().value());
 
         List<Argument> args = command.arguments();
         if (!args.isEmpty()) {
