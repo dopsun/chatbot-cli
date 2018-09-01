@@ -5,6 +5,8 @@
 package com.dopsun.chatbot.cli;
 
 /**
+ * TODO: name of this class to be reviewed, some alternatives including MatcherCostRate.
+ * 
  * @author Dop Sun
  * @since 1.0.0
  */
