@@ -4,11 +4,13 @@
 
 package com.dopsun.chatbot.cli.sml;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalInt;
+import java.util.regex.Pattern;
 
 import com.dopsun.chatbot.cli.Argument;
 
@@ -42,7 +44,7 @@ final class TemplateVariablePart extends TemplatePart {
 
         if (attrStartIndex > 0) {
             name = text.substring(0, attrStartIndex).trim();
-            attrListText = name.substring(attrStartIndex + 1).trim();
+            attrListText = text.substring(attrStartIndex + 1).trim();
         }
 
         if (attrListText != null) {
@@ -72,6 +74,41 @@ final class TemplateVariablePart extends TemplatePart {
 
     public Optional<Argument> match(String value) {
         String trimmed = value.trim();
+
+        OptionalInt optMinChar = getMinChar();
+        if (optMinChar.isPresent() && trimmed.length() < optMinChar.getAsInt()) {
+            return Optional.empty();
+        }
+
+        OptionalInt optMaxChar = getMaxChar();
+        if (optMaxChar.isPresent() && trimmed.length() > optMaxChar.getAsInt()) {
+            return Optional.empty();
+        }
+
+        OptionalInt optMinWord = getMinWord();
+        OptionalInt optMaxWord = getMaxWord();
+        if (optMinWord.isPresent() || optMaxWord.isPresent()) {
+            String[] words = trimmed.split(" ");
+            long wordCount = Arrays.stream(words).filter(w -> !w.trim().isEmpty()).count();
+
+            if (optMinWord.isPresent() && wordCount < optMinWord.getAsInt()) {
+                return Optional.empty();
+            }
+            if (optMaxWord.isPresent() && wordCount > optMaxWord.getAsInt()) {
+                return Optional.empty();
+            }
+        }
+
+        Optional<String> optPrefix = getPrefix();
+        if (optPrefix.isPresent() && !trimmed.startsWith(optPrefix.get())) {
+            return Optional.empty();
+        }
+
+        Optional<String> optPattern = getPattern();
+        if (optPattern.isPresent() && !Pattern.matches(optPattern.get(), trimmed)) {
+            return Optional.empty();
+        }
+
         if (trimmed.isEmpty()) {
             return Optional.of(new CliArgumentImpl(this.name()));
         } else {

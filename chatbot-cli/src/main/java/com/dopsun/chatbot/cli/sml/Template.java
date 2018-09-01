@@ -101,9 +101,13 @@ final class Template {
                 if (lastVarPart != null) {
                     String varValue = commandText.substring(index, startAndLength.start()).trim();
                     Optional<Argument> optArgument = lastVarPart.match(varValue);
-                    if (optArgument.isPresent()) {
-                        argList.add(optArgument.get());
+                    if (!optArgument.isPresent()) {
+                        matched = false;
+                        // TODO: logging?
+                        break;
                     }
+
+                    argList.add(optArgument.get());
 
                     lastVarPart = null;
                 }
@@ -125,7 +129,11 @@ final class Template {
         if (lastVarPart != null) {
             String varValue = commandText.substring(index).trim();
             Optional<Argument> optArgument = lastVarPart.match(varValue);
-            if (optArgument.isPresent()) {
+
+            if (!optArgument.isPresent()) {
+                // TODO: logging?
+                matched = false;
+            } else {
                 argList.add(optArgument.get());
             }
         }
