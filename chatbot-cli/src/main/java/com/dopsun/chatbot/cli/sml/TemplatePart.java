@@ -10,8 +10,8 @@ import java.util.Objects;
  * @author Dop Sun
  * @since 1.0.0
  */
-public abstract class TemplatePart {
-    final String name;
+abstract class TemplatePart {
+    private final String name;
 
     /**
      * @param name
@@ -27,9 +27,10 @@ public abstract class TemplatePart {
         this.name = temp;
     }
 
-    static class VariablePart extends TemplatePart {
-        public VariablePart(String name) {
-            super(name);
-        }
+    /**
+     * @return
+     */
+    public String name() {
+        return name;
     }
 }

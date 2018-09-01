@@ -4,15 +4,159 @@
 
 package com.dopsun.chatbot.cli.sml;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.OptionalInt;
+
+import com.dopsun.chatbot.cli.Argument;
+
 /**
+ * Variable can be defined as <code>${name|attr1=value1, attr2=value2}</code>
+ * 
  * @author Dop Sun
  * @since 1.0.0
  */
 final class TemplateVariablePart extends TemplatePart {
+    private static final String ATTR_START = "|";
+    private static final String ATTR_SEPARATOR = ",";
+    private static final String ATTR_NAME_VALUESEPARATOR = "=";
+
+    private static final String MIN_CHAR = "min-char";
+    private static final String MAX_CHAR = "max-char";
+    private static final String MIN_WORD = "min-word";
+    private static final String MAX_WORD = "max-word";
+    private static final String PATTERN = "pattern";
+    private static final String PREFIX = "prefix";
+
+    public static TemplateVariablePart parse(String text) {
+        Objects.requireNonNull(text);
+
+        String name = text;
+        Map<String, String> attrMap = new HashMap<>();
+
+        String attrListText = null;
+
+        int attrStartIndex = text.indexOf(ATTR_START);
+
+        if (attrStartIndex > 0) {
+            name = text.substring(0, attrStartIndex).trim();
+            attrListText = name.substring(attrStartIndex + 1).trim();
+        }
+
+        if (attrListText != null) {
+            String[] nameAndValueList = attrListText.split(ATTR_SEPARATOR);
+            for (String nameAndValue : nameAndValueList) {
+                String trimmed = nameAndValue.trim();
+                String[] nameValuePair = trimmed.split(ATTR_NAME_VALUESEPARATOR);
+
+                attrMap.put(nameValuePair[0].trim(), nameValuePair[1].trim());
+            }
+        }
+
+        return new TemplateVariablePart(name, attrMap);
+    }
+
+    private final Map<String, String> attrMap;
+
     /**
      * @param name
+     * @param attributeMap
      */
-    public TemplateVariablePart(String name) {
+    public TemplateVariablePart(String name, Map<String, String> attributeMap) {
         super(name);
+
+        this.attrMap = attributeMap;
+    }
+
+    public Optional<Argument> match(String value) {
+        String trimmed = value.trim();
+        if (trimmed.isEmpty()) {
+            return Optional.of(new CliArgumentImpl(this.name()));
+        } else {
+            return Optional.of(new CliArgumentImpl(this.name(), trimmed));
+        }
+    }
+
+    /**
+     * @return
+     */
+    public OptionalInt getMinChar() {
+        return getAsInteger(MIN_CHAR);
+    }
+
+    /**
+     * @return
+     */
+    public OptionalInt getMaxChar() {
+        return getAsInteger(MAX_CHAR);
+    }
+
+    /**
+     * @return
+     */
+    public OptionalInt getMinWord() {
+        return getAsInteger(MIN_WORD);
+    }
+
+    /**
+     * @return
+     */
+    public OptionalInt getMaxWord() {
+        return getAsInteger(MAX_WORD);
+    }
+
+    /**
+     * @return
+     */
+    public Optional<String> getPrefix() {
+        return Optional.ofNullable(attrMap.get(PREFIX));
+    }
+
+    /**
+     * @return
+     */
+    public Optional<String> getPattern() {
+        return Optional.ofNullable(attrMap.get(PATTERN));
+    }
+
+    private OptionalInt getAsInteger(String key) {
+        String minCharText = attrMap.get(key);
+        if (minCharText == null) {
+            return OptionalInt.empty();
+        }
+
+        return OptionalInt.of(Integer.getInteger(minCharText));
+    }
+
+    private static class CliArgumentImpl implements Argument {
+        private final String name;
+        private final Optional<String> value;
+
+        public CliArgumentImpl(String name) {
+            Objects.requireNonNull(name);
+
+            this.name = name;
+            this.value = Optional.empty();
+        }
+
+        public CliArgumentImpl(String name, String value) {
+            Objects.requireNonNull(name);
+            Objects.requireNonNull(value);
+
+            this.name = name;
+            this.value = Optional.of(value);
+        }
+
+        @Override
+        public String name() {
+            return name;
+        }
+
+        @Override
+        public Optional<String> value() {
+            return value;
+        }
     }
 }

@@ -11,7 +11,6 @@ import java.util.Optional;
 
 import com.dopsun.chatbot.cli.Argument;
 import com.dopsun.chatbot.cli.Rank;
-import com.dopsun.chatbot.cli.sml.TemplatePart.VariablePart;
 
 /**
  * @author Dop Sun
@@ -63,7 +62,7 @@ final class Template {
             }
 
             partName = template.substring(index, stopPos).trim();
-            partList.add(new VariablePart(partName));
+            partList.add(TemplateVariablePart.parse(partName));
 
             index = stopPos + VAR_STOP_TAG.length();
         }
@@ -82,7 +81,7 @@ final class Template {
 
         List<Argument> argList = new ArrayList<>();
 
-        VariablePart lastVarPart = null;
+        TemplateVariablePart lastVarPart = null;
 
         boolean matched = true;
         for (TemplatePart part : partList) {
@@ -101,10 +100,9 @@ final class Template {
 
                 if (lastVarPart != null) {
                     String varValue = commandText.substring(index, startAndLength.start()).trim();
-                    if (varValue.length() == 0) {
-                        argList.add(new CliArgumentImpl(lastVarPart.name, Optional.empty()));
-                    } else {
-                        argList.add(new CliArgumentImpl(lastVarPart.name, Optional.of(varValue)));
+                    Optional<Argument> optArgument = lastVarPart.match(varValue);
+                    if (optArgument.isPresent()) {
+                        argList.add(optArgument.get());
                     }
 
                     lastVarPart = null;
@@ -113,23 +111,22 @@ final class Template {
                 index = startAndLength.stop();
             }
 
-            if (part instanceof VariablePart) {
+            if (part instanceof TemplateVariablePart) {
                 if (lastVarPart != null) {
                     // TODO: logging?
                     matched = false;
                     break;
                 }
 
-                lastVarPart = (VariablePart) part;
+                lastVarPart = (TemplateVariablePart) part;
             }
         }
 
         if (lastVarPart != null) {
             String varValue = commandText.substring(index).trim();
-            if (varValue.length() == 0) {
-                argList.add(new CliArgumentImpl(lastVarPart.name, Optional.empty()));
-            } else {
-                argList.add(new CliArgumentImpl(lastVarPart.name, Optional.of(varValue)));
+            Optional<Argument> optArgument = lastVarPart.match(varValue);
+            if (optArgument.isPresent()) {
+                argList.add(optArgument.get());
             }
         }
 
@@ -171,29 +168,6 @@ final class Template {
          */
         public List<Argument> argList() {
             return argList;
-        }
-    }
-
-    private static class CliArgumentImpl implements Argument {
-        private final String name;
-        private final Optional<String> value;
-
-        public CliArgumentImpl(String name, Optional<String> value) {
-            Objects.requireNonNull(name);
-            Objects.requireNonNull(value);
-
-            this.name = name;
-            this.value = value;
-        }
-
-        @Override
-        public String name() {
-            return name;
-        }
-
-        @Override
-        public Optional<String> value() {
-            return value;
         }
     }
 }
